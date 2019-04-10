@@ -1,0 +1,1 @@
+web: gunicorn mnemosyne.wsgi --log-file -
