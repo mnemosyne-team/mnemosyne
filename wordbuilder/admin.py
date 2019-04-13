@@ -3,11 +3,19 @@ from django.contrib import admin
 from wordbuilder import models
 
 
+class LexicalEntryInline(admin.TabularInline):
+    model = models.LexicalEntry
+
+
+class WordAdmin(admin.ModelAdmin):
+    inlines = (LexicalEntryInline,)
+
+
 class SenseInline(admin.TabularInline):
     model = models.Sense
 
 
-class WordAdmin(admin.ModelAdmin):
+class LexicalEntryAdmin(admin.ModelAdmin):
     inlines = (SenseInline,)
 
 
@@ -37,6 +45,7 @@ class DictionaryAdmin(admin.ModelAdmin):
 admin.site.register(models.Dictionary, DictionaryAdmin)
 admin.site.register(models.UserWord)
 admin.site.register(models.Word, WordAdmin)
+admin.site.register(models.LexicalEntry)
 admin.site.register(models.LexicalCategory)
 admin.site.register(models.Sense, SenseAdmin)
 admin.site.register(models.Definition)
