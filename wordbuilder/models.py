@@ -42,23 +42,35 @@ class Pronunciation(models.Model):
         return self.phonetic_spelling
 
 
-class Sense(models.Model):
+class LexicalEntry(models.Model):
+    class Meta:
+        verbose_name = 'lexical entry'
+        verbose_name_plural = 'lexical entries'
+
     word = models.ForeignKey(
-        Word, on_delete=models.CASCADE, related_name='senses'
+        Word, on_delete=models.CASCADE,
+        related_name='lexical_entries'
     )
     lexical_category = models.ForeignKey(
         LexicalCategory, on_delete=models.CASCADE,
-        related_name='senses'
+        related_name='lexical_entries'
     )
     pronunciation = models.ForeignKey(
-        Pronunciation, on_delete=models.CASCADE, related_name='senses',
+        Pronunciation, on_delete=models.CASCADE,
+        related_name='lexical_entries'
     )
 
     def __str__(self):
-        return (
-            f'{self.word} {self.lexical_category} '
-            f'{self.pronunciation.phonetic_spelling}'
-        )
+        return f'{self.lexical_category} {self.pronunciation}'
+
+
+class Sense(models.Model):
+    lexical_entry = models.ForeignKey(
+        LexicalEntry, on_delete=models.CASCADE, related_name='senses'
+    )
+
+    def __str__(self):
+        return str(self.lexical_entry)
 
 
 class Definition(models.Model):
@@ -107,12 +119,8 @@ class UserWord(models.Model):
     pronunciation = models.ForeignKey(
         Pronunciation, on_delete=models.CASCADE, related_name='user_words',
     )
-    definition = models.ForeignKey(
-        Definition, on_delete=models.CASCADE, related_name='user_words',
-    )
-    example = models.ForeignKey(
-        Example, on_delete=models.CASCADE, related_name='user_words',
-        blank=True, null=True
+    sense = models.ForeignKey(
+        Sense, on_delete=models.CASCADE, related_name='user_words'
     )
     study_progress = models.IntegerField(default=0)
     added = models.DateTimeField(default=datetime.datetime.utcnow)
