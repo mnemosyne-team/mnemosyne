@@ -33,7 +33,7 @@ class Pronunciation(models.Model):
         verbose_name = 'pronunciation'
         verbose_name_plural = 'pronunciations'
 
-    phonetic_spelling = models.CharField(max_length=30, blank=True, null=True)
+    phonetic_spelling = models.CharField(max_length=30)
     audio = models.URLField(
         blank=True, null=True, verbose_name='audio file url'
     )
