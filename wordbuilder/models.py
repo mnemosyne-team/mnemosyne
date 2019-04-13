@@ -52,7 +52,6 @@ class Sense(models.Model):
     )
     pronunciation = models.ForeignKey(
         Pronunciation, on_delete=models.CASCADE, related_name='senses',
-        blank=True, null=True
     )
 
     def __str__(self):
@@ -107,7 +106,6 @@ class UserWord(models.Model):
     )
     pronunciation = models.ForeignKey(
         Pronunciation, on_delete=models.CASCADE, related_name='user_words',
-        blank=True, null=True
     )
     definition = models.ForeignKey(
         Definition, on_delete=models.CASCADE, related_name='user_words',
