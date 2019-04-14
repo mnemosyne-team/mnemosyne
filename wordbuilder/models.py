@@ -87,7 +87,7 @@ class Example(models.Model):
     sense = models.ForeignKey(
         Sense, on_delete=models.CASCADE, related_name='examples'
     )
-    text = models.TextField()
+    text = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.text
