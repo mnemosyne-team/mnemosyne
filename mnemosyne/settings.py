@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'wordbuilder.apps.WordbuilderConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -128,4 +129,13 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+# Use code lower to work locally.
+# django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
+# Deploy without it.
+# Without logging and databases kwargs launch drops because it needs SSL
+# to connect to DB, but local machine doesn't have one.
 django_heroku.settings(locals())
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'

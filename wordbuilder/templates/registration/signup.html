@@ -1,0 +1,17 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Mnemosyne - Create User{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+                <form method="post">
+                    {% include 'registration/form.html' with button_text="Sign up" %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

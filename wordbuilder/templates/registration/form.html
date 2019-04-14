@@ -1,0 +1,12 @@
+{% load widget_tweaks %}
+
+{% csrf_token %}
+{{ form.non_field_errors }}
+{% for field in form %}
+    <div class="input-field">
+        {{ field.label_tag }}
+        {{ field|add_class:"validate"|add_error_class:"invalid" }}
+        {{ field.errors }}
+    </div>
+{% endfor %}
+<button class="btn waves-effect waves-teal" type="submit">{{ button_text }}</button>

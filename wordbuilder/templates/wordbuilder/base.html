@@ -10,6 +10,26 @@
     <title>{% block title %}Index{% endblock %}</title>
 </head>
 <body>
+    <nav style="background-color: deepskyblue">
+        <div class="nav-wrapper">
+            <a href="{% url 'index' %}" class="brand-logo" style="margin-left: 5px">Mnemosyne</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if not user.is_authenticated %}
+                    <li><a href="{% url 'login' %}" class="waves-effect waves-light btn">
+                        Log in <i class="material-icons right">desktop_windows</i>
+                    </a></li>
+                    <li><a href="{% url 'signup' %}" class="waves-effect waves-light btn">
+                        Sign up <i class="material-icons right">person_add</i>
+                    </a></li>
+                {% else %}
+                    <li>{{ user }}</li>
+                    <li><a href="{% url 'logout' %}" class="waves-effect waves-light btn">
+                        Log out <i class="material-icons right">exit_to_app</i>
+                    </a></li>
+                {% endif %}
+          </ul>
+        </div>
+    </nav>
     {% block content %}
     {% endblock %}
     <!-- Materialize JavaScript -->
