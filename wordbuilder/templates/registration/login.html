@@ -8,7 +8,8 @@
            <div class="col s12 m8 offset-m2 l6 offset-l3">
                <form method="post">
                    {% include 'registration/form.html' with button_text='Log in' %}
-                   <a class="right" href="{% url 'signup' %}"> New user? </a>
+                   <a class="right" href="{% url 'signup' %}"> New user? </a><br>
+                   <a class="right" href="{% url 'password_reset' %}"> Forgot password? </a>
                </form>
            </div>
        </div>
