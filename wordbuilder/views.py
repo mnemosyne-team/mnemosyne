@@ -21,3 +21,12 @@ class SignUpView(FormView):
         user = User.objects.get(username=form.cleaned_data['username'])
         Dictionary.objects.create(user=user)
         return redirect(self.success_url)
+
+
+class DictionaryView(TemplateView):
+    template_name = 'wordbuilder/dictionary.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['words'] = self.request.user.dictionary.words.all()
+        return context

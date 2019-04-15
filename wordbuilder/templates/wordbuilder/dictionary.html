@@ -1,0 +1,99 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block custom_css %}
+    <style>
+        .pronuns:hover {
+            cursor: pointer;
+        }
+
+        .pronuns i {
+            color: white;
+        }
+
+        .delete {
+            color: white;
+        }
+
+        .def {
+            font-size: 1.2rem;
+        }
+
+        .word, .pros {
+            font-size: 1.5rem;
+        }
+
+        .word {
+            margin-right: 10px;
+        }
+
+        .row {
+            margin-bottom: 0;
+        }
+
+        .search-nav {
+            margin-top: 10px;
+        }
+
+        .collection {
+            border: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m10 offset-m1">
+                <nav class="search-nav">
+                    <div class="nav-wrapper">
+                        <form>
+                            <div class="input-field">
+                                <input id="search" type="search" required>
+                                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                                <i class="material-icons">close</i>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+
+               <ul class="collection">
+                   {% for word in words %}
+                       {% include 'wordbuilder/word_card.html' with word=word id=forloop.counter0 %}
+                   {% endfor %}
+               </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+    function playAudio(src) {
+    const audio = document.createElement('audio');
+    $(audio).attr('src', src);
+    audio.play();
+}
+
+$(document).ready(function() {
+    $('.tooltipped').tooltip({margin: -10});
+
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+    });
+
+    $('.pronuns').click((event) => {
+        playAudio($(event.target).data('pronuns-url'));
+    });
+
+    $('a.delete').click((event) => {
+        const wordEntryId = $(event.currentTarget).data('item-id');
+
+        $(`#${wordEntryId}`).fadeTo("slow", 0.01, function () {
+            $(this).slideUp(250, function () {
+                $(this).remove();
+            });
+        });
+    });
+});
+    </script>
+{% endblock %}

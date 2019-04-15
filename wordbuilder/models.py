@@ -107,6 +107,9 @@ class Dictionary(models.Model):
 
 
 class UserWord(models.Model):
+    class Meta:
+        ordering = ('-added',)
+
     dictionary = models.ForeignKey(
         Dictionary, on_delete=models.CASCADE, related_name='words'
     )

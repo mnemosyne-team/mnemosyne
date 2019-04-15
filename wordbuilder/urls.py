@@ -8,4 +8,5 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
+    path('dictionary/', views.DictionaryView.as_view(), name='dictionary'),
 ]

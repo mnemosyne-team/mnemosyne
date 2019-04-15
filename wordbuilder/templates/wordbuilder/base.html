@@ -3,38 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Index{% endblock %}</title>
     <!-- Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <title>{% block title %}Index{% endblock %}</title>
+    <style>
+        ul.dropdown-content li:hover {
+            background: rgba(130, 130, 130, 0.05);
+        }
+    </style>
+    <!-- Custom CSS -->
+    {% block custom_css %}
+    {% endblock %}
 </head>
 <body>
-    <nav style="background-color: deepskyblue">
+    {% include 'wordbuilder/profile_dopdown.html' with id='dropdown-profile' %}
+    {% include 'wordbuilder/profile_dopdown.html' with id='dropdown-profile-mobile' %}
+    <nav>
         <div class="nav-wrapper">
-            <a href="{% url 'index' %}" class="brand-logo" style="margin-left: 5px">Mnemosyne</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                {% if not user.is_authenticated %}
-                    <li><a href="{% url 'login' %}" class="waves-effect waves-light btn">
-                        Log in <i class="material-icons right">desktop_windows</i>
-                    </a></li>
-                    <li><a href="{% url 'signup' %}" class="waves-effect waves-light btn">
-                        Sign up <i class="material-icons right">person_add</i>
-                    </a></li>
+            <a href="{% url 'index' %}" class="brand-logo">Mnemosyne</a>
+            <a href="#" data-target="mobile-nav-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#">Catalog</a></li>
+                <li><a href="#">Trainings</a></li>
+                <li><a href="{% url 'dictionary' %}">Dictionary</a></li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <a class="dropdown-trigger" href="#" data-target="dropdown-profile"><i class="small material-icons">account_box</i></a>
+                    </li>
                 {% else %}
-                    <li>{{ user }}</li>
-                    <li><a href="{% url 'logout' %}" class="waves-effect waves-light btn">
-                        Log out <i class="material-icons right">exit_to_app</i>
-                    </a></li>
+                    <li><a href="{% url 'login' %}">Log in</a></li>
                 {% endif %}
-          </ul>
+            </ul>
         </div>
     </nav>
+    <ul class="sidenav red lighten-2 white-text" id="mobile-nav-menu">
+        <li><a href="#">Catalog</a></li>
+        <li><a href="">Trainings</a></li>
+        <li><a href="{% url 'dictionary' %}">Dictionary</a></li>
+        {% if user.is_authenticated %}
+            <li>
+                <a class="dropdown-trigger" href="#" data-target="dropdown-profile-mobile">
+                    Profile
+                </a>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Log in</a></li>
+        {% endif %}
+    </ul>
+
     {% block content %}
     {% endblock %}
-    <!-- Materialize JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.dropdown-trigger').dropdown({coverTrigger: false});
+            $('.sidenav').sidenav();
+            $(".dropdown-content>li>a").css("color", "white");
+            $(".sidenav>li>a").css("color", "white");
+        });
+    </script>
+  <!-- Custom JavaScript -->
+  {% block custom_js %}
+  {% endblock %}
 </body>
 </html>

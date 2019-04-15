@@ -1,0 +1,29 @@
+<li id="word-entry-{{ id }}" class="collection-item red lighten-2">
+    <div class="row">
+        <div class="col s12">
+            <div>
+                <a href="#" class="pronuns tooltipped"
+                   data-position="top" data-tooltip="[{{ word.pronunciation.phonetic_spelling }}]">
+                    <i data-pronuns-url="{{ word.pronunciation.audio }}" class="small material-icons left">volume_up</i>
+                </a>
+                <span class="word yellow-text text-accent-2">{{ word.word.name }}</span>
+                <span class="pros blue-text text-lighten-4 ">{{ word.lexical_category.name }}</span>
+                    <a href="#" class="delete" data-item-id="word-entry-{{ id }}"><i class="small material-icons right">delete</i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header">
+                        {{ word.sense.definitions.first.text }}
+                    </div>
+                    <div class="collapsible-body white">
+                        {{ word.sense.examples.first.text }}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</li>
