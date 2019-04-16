@@ -1,0 +1,38 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block title %}Mnemosyne - User Profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h4 style="text-align: center">Your personal data</h4>
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+                <table class="centered responsive-table">
+                    <tbody>
+                        <tr>
+                            <td>Username</td>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>First name</td>
+                            <td>{{ user.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Last name</td>
+                            <td>{{ user.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col s12 m8 offset-m2 l6 offset-l3">
+                    <a href="{% url 'profile_update' %}"> Change personal data </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

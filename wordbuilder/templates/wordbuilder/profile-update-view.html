@@ -1,0 +1,16 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block title %}Mnemosyne - User Profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h3>Update your personal data</h3>
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+               <form method="post">
+                   {% include 'registration/form.html' with button_text='Save changes' %}
+               </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
