@@ -15,6 +15,42 @@ class Word(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def from_dict(cls, dict):
+        if dict['text'] not in list(Word.objects.only('name').all()):
+            word = cls.objects.create(name=dict['text'])
+            for entry in dict['lexical_entries']:
+                if entry['pronunciation'] is not None:
+                    if entry['pronunciation']['phonetic_spelling'] not in \
+                            list(Pronunciation.objects.only(
+                                'phonetic_spelling'
+                            ).all()):
+                        pronunciation = Pronunciation.from_dict(
+                            entry['pronunciation']
+                        )
+                    else:
+                        pronunciation = Pronunciation.objects.get(
+                            phonetic_spelling=entry['pronunciation'][
+                                'phonetic_spelling'
+                            ]
+                        )
+                else:
+                    pronunciation = None
+                if entry['lexical_category'] not in \
+                        list(LexicalCategory.objects.only('name').all()):
+                    lexical_entry = LexicalEntry.from_dict(
+                        word,
+                        LexicalCategory.from_dict(entry['lexical_category']),
+                        pronunciation
+                    )
+                else:
+                    lexical_entry = LexicalEntry.objects.get(
+                        name=entry['lexical_category']
+                    )
+                for sense in entry['senses']:
+                    Sense.from_dict(lexical_entry, sense)
+            return word
+
 
 class LexicalCategory(models.Model):
     class Meta:
@@ -26,6 +62,10 @@ class LexicalCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def from_dict(cls, name):
+        return cls.objects.create(name=name)
 
 
 class Pronunciation(models.Model):
@@ -40,6 +80,13 @@ class Pronunciation(models.Model):
 
     def __str__(self):
         return self.phonetic_spelling
+
+    @classmethod
+    def from_dict(cls, pronunciation):
+        return cls.objects.create(
+            phonetic_spelling=pronunciation['phonetic_spelling'],
+            audio=pronunciation['audio']
+        )
 
 
 class LexicalEntry(models.Model):
@@ -63,6 +110,14 @@ class LexicalEntry(models.Model):
     def __str__(self):
         return f'{self.lexical_category} {self.pronunciation}'
 
+    @classmethod
+    def from_dict(cls, word, lexical_category, pronunciation=None):
+        return cls.objects.create(
+            word=word,
+            lexical_category=lexical_category,
+            pronunciation=pronunciation
+        )
+
 
 class Sense(models.Model):
     lexical_entry = models.ForeignKey(
@@ -71,6 +126,15 @@ class Sense(models.Model):
 
     def __str__(self):
         return str(self.lexical_entry)
+
+    @classmethod
+    def from_dict(cls, lexical_entry, sense):
+        obj = cls.objects.create(lexical_entry=lexical_entry)
+        obj.definitions.add(Definition.from_dict(obj, sense['definitions']))
+        if sense['examples']:
+            for example in sense['examples']:
+                obj.examples.add(Example.from_dict(obj, example))
+        return obj
 
 
 class Definition(models.Model):
@@ -82,6 +146,10 @@ class Definition(models.Model):
     def __str__(self):
         return self.text
 
+    @classmethod
+    def from_dict(cls, sense, text):
+        return cls.objects.create(sense=sense, text=text)
+
 
 class Example(models.Model):
     sense = models.ForeignKey(
@@ -91,6 +159,10 @@ class Example(models.Model):
 
     def __str__(self):
         return self.text
+
+    @classmethod
+    def from_dict(cls, sense, text):
+        return cls.objects.create(sense=sense, text=text)
 
 
 class Dictionary(models.Model):

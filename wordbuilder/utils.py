@@ -27,18 +27,16 @@ def get_word_data(word: str) -> typing.Optional[typing.Dict]:
 				{'lexical_category': lexical_entry['lexicalCategory']}
 			)
 
-			result['lexical_entries'][i]['pronunciation'] = []
+			result['lexical_entries'][i]['pronunciation'] = {}
 			if 'pronunciations' in lexical_entry:
 				for pronunciation in lexical_entry['pronunciations']:
 					if pronunciation['phoneticNotation'] == 'IPA':
-						result['lexical_entries'][i]['pronunciation'].append(
-							{
-								'phonetic_spelling':
-									pronunciation['phoneticSpelling'],
-								'audio':
-									pronunciation['audioFile']
-							}
-						)
+						result['lexical_entries'][i]['pronunciation'][
+							'phonetic_spelling'
+						] = pronunciation['phoneticSpelling']
+						result['lexical_entries'][i]['pronunciation'][
+							'audio'
+						] = pronunciation['audioFile']
 
 			result['lexical_entries'][i]['senses'] = []
 			for entry in lexical_entry['entries']:
@@ -46,7 +44,7 @@ def get_word_data(word: str) -> typing.Optional[typing.Dict]:
 					if 'definitions' in sense:
 						result['lexical_entries'][i]['senses'].append(
 							{
-								'definitions': sense['definitions'],
+								'definitions': sense['definitions'][0],
 								'examples': []
 							}
 						)
