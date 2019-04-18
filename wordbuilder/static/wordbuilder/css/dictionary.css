@@ -1,0 +1,70 @@
+input[type=search], input[type=search]::placeholder {
+    color: yellow;
+}
+
+input[type=search]:focus::placeholder {
+   color: black;
+}
+.pronunciation:hover {
+    cursor: pointer;
+}
+.pronunciation i {
+    color: white;
+}
+.delete {
+    color: white;
+}
+.def, .example {
+    font-size: 1.2rem;
+}
+.word, .pros {
+    font-size: 1.5rem;
+}
+.word {
+    margin-right: 10px;
+}
+.row {
+    margin-bottom: 0;
+}
+.search-nav {
+    margin-top: 10px;
+}
+.collection {
+    border: none;
+}
+.modal {
+    min-height: calc(100vh - 10%);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: hidden;
+}
+#modal-content {
+    max-height: calc(100% - 100px);
+    padding: 0;
+    height: 100%;
+}
+#modal-content > .collapsible {
+    margin: 0;
+    height: 100%;
+    overflow-y: auto;
+}
+.collapsible .collapsible-body {
+    padding: 14px;
+}
+#modal-content > .collapsible .collapsible-body {
+    padding: 0;
+    border: 0;
+}
+#modal-content .collection-item {
+    padding: 14px;
+}
+.modal h3 {
+    margin-bottom: 0;
+}
+
+.collection {
+    overflow-y: auto;
+}

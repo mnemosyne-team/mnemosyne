@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,18 +59,15 @@
     {% endblock %}
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <!-- JS Cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <!-- Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('.dropdown-trigger').dropdown({coverTrigger: false});
-            $('.sidenav').sidenav();
-            $(".dropdown-content>li>a").css("color", "white");
-            $(".sidenav>li>a").css("color", "white");
-        });
-    </script>
-  <!-- Custom JavaScript -->
-  {% block custom_js %}
-  {% endblock %}
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="{% static 'wordbuilder/js/base.js' %}"></script>
+    <!-- Custom JavaScript -->
+    {% block custom_js %}
+    {% endblock %}
 </body>
 </html>

@@ -1,0 +1,81 @@
+{% verbatim %}
+<div id="word-modal" class="modal modal-fixed-footer">
+
+    <div class="modal-header red lighten-2 yellow-text text-accent-2">
+        <h3 class="modal-header center">{{ word.text }}</h3>
+    </div>
+
+    <!-- Modal content -->
+    <div id="modal-content" class="modal-content">
+        {% endverbatim %}
+        <form action="{% url 'user_words' %}" method="post">
+            {% csrf_token %}
+            {% verbatim %}
+        <!-- Collapsible -->
+        <ul class="collapsible ">
+            <li v-for="lexicalEntry in word.lexical_entries">
+
+                <!-- Collapsible header -->
+                <div class="collapsible-header">
+                    <div>
+                        <span class="pros">
+                            {{ lexicalEntry.lexical_category.name.toLowerCase() }}
+                        </span>
+                        <span class="pros" v-if="lexicalEntry.pronunciation[0]">
+                            /{{ lexicalEntry.pronunciation[0].phonetic_spelling}}/
+                        </span>
+                        <span v-if="lexicalEntry.pronunciation[0]">
+                            <a v-on:click="handlePronunciation" class="pronunciation tooltipped"
+                               :data-pronunciation-url="lexicalEntry.pronunciation[0].audio"
+                               data-position="top">
+                                <i class="material-icons red-text">volume_up</i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <!-- Collapsible header end -->
+
+                <!-- Collapsible body -->
+                <div class="collapsible-body">
+                    <ul class="collection">
+                        <li class="collection-item red lighten-5" v-for="sense in lexicalEntry.senses">
+                            <div>
+                                <label class="right">
+                                    <input type="radio" name="sense" :value="sense.id" required>
+                                    <span>Select sense</span>
+                                </label>
+                            </div>
+                            <div class="def">Definitions:</div>
+                            <ul>
+                                <li v-for="definition in sense.definitions">{{ definition }}</li>
+                            </ul>
+                            <div v-if="sense.examples.length" class="example">Examples:</div>
+                            <ol>
+                                <li v-for="example in sense.examples">{{ example }}</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Collapsible body end -->
+
+            </li>
+        </ul>
+        <!-- Collapsible end -->
+        </form>
+    </div>
+    <!-- Modal content end -->
+
+    <!-- Modal footer -->
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-floating red left">
+            <i class="material-icons">close</i>
+        </a>
+        <a v-on:click="submit" class="modal-close waves-effect waves-green btn-floating red">
+            <i class="material-icons">add</i>
+        </a>
+    </div>
+    <!-- Modal footer end -->
+
+</div>
+{% endverbatim %}
+<!-- Word modal end -->

@@ -15,6 +15,16 @@ class Word(models.Model):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.name,
+            'lexical_entries': [
+                lexical_entry.to_dict()
+                for lexical_entry in self.lexical_entries.all()
+            ]
+        }
+      
     @classmethod
     def from_dict(cls, dict):
         if dict['text'] not in list(Word.objects.values_list('name').all()):
@@ -75,6 +85,9 @@ class LexicalCategory(models.Model):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name}
+
     @classmethod
     def from_dict(cls, name):
         return cls.objects.create(name=name)
@@ -92,6 +105,15 @@ class Pronunciation(models.Model):
 
     def __str__(self):
         return self.phonetic_spelling
+
+    def to_dict(self):
+        result = {
+            'id': self.id,
+            'phonetic_spelling': self.phonetic_spelling
+        }
+        if self.audio:
+            result['audio'] = self.audio
+        return result
 
     @classmethod
     def from_dict(cls, pronunciation):
@@ -120,7 +142,18 @@ class LexicalEntry(models.Model):
     )
 
     def __str__(self):
-        return f'{self.lexical_category} {self.pronunciation}'
+        return f'{self.word} {self.lexical_category}'
+
+    def to_dict(self):
+        result = {
+            'id': self.id,
+            'lexical_category': self.lexical_category.to_dict(),
+            'pronunciation': [],
+            'senses': [sense.to_dict() for sense in self.senses.all()]
+        }
+        if self.pronunciation:
+            result['pronunciation'].append(self.pronunciation.to_dict())
+        return result
 
     @classmethod
     def from_dict(cls, word, lexical_category, pronunciation=None):
@@ -139,6 +172,19 @@ class Sense(models.Model):
     def __str__(self):
         return str(self.lexical_entry)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'definitions': [
+                definition.text
+                for definition in self.definitions.all()
+            ],
+            'examples': [
+                example.text
+                for example in self.examples.all()
+            ]
+        }
+
     @classmethod
     def from_dict(cls, lexical_entry, sense):
         obj = cls.objects.create(lexical_entry=lexical_entry)
@@ -156,7 +202,14 @@ class Definition(models.Model):
     text = models.TextField()
 
     def __str__(self):
-        return self.text
+        return (
+            f'{self.sense.lexical_entry.word} '
+            f'{self.sense.lexical_entry.lexical_category} '
+            f'{self.text}'
+        )
+
+    def to_dict(self):
+        return {'id': self.id, 'text': self.text}
 
     @classmethod
     def from_dict(cls, sense, text):
@@ -170,7 +223,15 @@ class Example(models.Model):
     text = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.text
+        return (
+            f'{self.sense.lexical_entry.word} '
+            f'{self.sense.lexical_entry.lexical_category} '
+            f'{self.text}'
+        )
+
+    def to_dict(self):
+        if self.text:
+            return {'id': self.id, 'text': self.text}
 
     @classmethod
     def from_dict(cls, sense, text):

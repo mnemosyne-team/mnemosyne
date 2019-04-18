@@ -31,12 +31,15 @@ def get_word_data(word: str) -> typing.Optional[typing.Dict]:
 			if 'pronunciations' in lexical_entry:
 				for pronunciation in lexical_entry['pronunciations']:
 					if pronunciation['phoneticNotation'] == 'IPA':
-						result['lexical_entries'][i]['pronunciation'][
-							'phonetic_spelling'
-						] = pronunciation['phoneticSpelling']
-						result['lexical_entries'][i]['pronunciation'][
-							'audio'
-						] = pronunciation['audioFile']
+						result['lexical_entries'][i]['pronunciation'].update(
+							{
+								'phonetic_spelling':
+									pronunciation['phoneticSpelling'],
+								'audio':
+									pronunciation['audioFile']
+							}
+						)
+						break
 
 			result['lexical_entries'][i]['senses'] = []
 			for entry in lexical_entry['entries']:

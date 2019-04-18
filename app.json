@@ -10,6 +10,30 @@
   "env": {
     "DISABLE_COLLECTSTATIC": {
       "required": true
+    },
+    "DEFAULT_FROM_EMAIL": {
+      "required": true
+    },
+    "EMAIL_HOST": {
+      "required": true
+    },
+    "EMAIL_HOST_PASSWORD": {
+      "required": true
+    },
+    "EMAIL_HOST_USER": {
+      "required": true
+    },
+    "EMAIL_PORT": {
+      "required": true
+    },
+    "OXFORD_API_URL": {
+      "required": true
+    },
+    "OXFORD_APP_ID": {
+      "required": true
+    },
+    "OXFORD_APP_KEY": {
+      "required": true
     }
   },
   "formation": {

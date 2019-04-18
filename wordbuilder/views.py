@@ -1,14 +1,20 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+import json
+
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, DetailView, UpdateView
+from django.views.generic import TemplateView, FormView, DetailView, UpdateView, View
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import (
+    JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
+)
 
+from wordbuilder.models import Dictionary, Word, Sense, UserWord
+from wordbuilder.utils import get_word_data
 from wordbuilder.forms import SignUpForm, ProfileUpdateForm
-from .models import Dictionary
 
 
-class IndexView(TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/index.html'
 
 
@@ -24,7 +30,7 @@ class SignUpView(FormView):
         return redirect(self.success_url)
 
 
-class DictionaryView(TemplateView):
+class DictionaryView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/dictionary.html'
 
     def get_context_data(self, **kwargs):
@@ -33,6 +39,54 @@ class DictionaryView(TemplateView):
         return context
 
 
+class WordDataView(LoginRequiredMixin, View):
+    def get(self, request, word):
+        word = word.lower()
+        word_obj = Word.objects.filter(name=word).first()
+        if word_obj:
+            word_dict = word_obj.to_dict()
+        else:
+            word_data = get_word_data(word)
+            if word_data:
+                word_obj = Word.from_dict(word_data)
+                word_dict = word_obj.to_dict()
+            else:
+                return HttpResponseNotFound()
+
+        return JsonResponse(word_dict)
+
+
+class UserWordView(LoginRequiredMixin, View):
+    def post(self, request):
+        sense_id = request.POST.get('sense')
+        sense = Sense.objects.get(pk=sense_id) if sense_id else None
+        if sense:
+            pronunciation = sense.lexical_entry.pronunciation
+            lexical_category = sense.lexical_entry.lexical_category
+            word = sense.lexical_entry.word
+            dictionary = self.request.user.dictionary
+
+            user_word = UserWord(
+                dictionary=dictionary, word=word,
+                lexical_category=lexical_category,
+                pronunciation=pronunciation, sense=sense
+            )
+            user_word.save()
+
+        return redirect(reverse_lazy('dictionary'))
+
+    def delete(self, request):
+        try:
+            data = request.body.decode('utf-8')
+            json_data = json.loads(data)
+            user_word_id = json_data.get('userWordId')
+            user = request.user
+            Dictionary.objects.get(user=user).words.filter(pk=user_word_id).delete()
+            return HttpResponse(status=204)
+        except Exception as e:
+            return HttpResponseBadRequest()
+          
+          
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'wordbuilder/profile-view.html'

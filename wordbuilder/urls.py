@@ -10,7 +10,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
     path('dictionary/', views.DictionaryView.as_view(), name='dictionary'),
-
+    path('words/<str:word>/', views.WordDataView.as_view(), name='word_data'),
+    path('user_words/', views.UserWordView.as_view(), name='user_words'),
     path('reset-password/',
          PasswordResetView.as_view(template_name='registration/password-reset-form.html',
                                    email_template_name='registration/password-reset-email.html'),
