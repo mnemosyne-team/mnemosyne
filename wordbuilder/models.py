@@ -17,14 +17,16 @@ class Word(models.Model):
 
     @classmethod
     def from_dict(cls, dict):
-        if dict['text'] not in list(Word.objects.only('name').all()):
+        if dict['text'] not in list(Word.objects.values_list('name').all()):
             word = cls.objects.create(name=dict['text'])
             for entry in dict['lexical_entries']:
-                if entry['pronunciation'] is not None:
+                if entry['pronunciation']:
                     if entry['pronunciation']['phonetic_spelling'] not in \
-                            list(Pronunciation.objects.only(
-                                'phonetic_spelling'
-                            ).all()):
+                            list(
+                                Pronunciation.objects.values_list(
+                                    'phonetic_spelling', flat=True
+                                ).all()
+                            ):
                         pronunciation = Pronunciation.from_dict(
                             entry['pronunciation']
                         )
@@ -36,16 +38,26 @@ class Word(models.Model):
                         )
                 else:
                     pronunciation = None
-                if entry['lexical_category'] not in \
-                        list(LexicalCategory.objects.only('name').all()):
+                if entry['lexical_category'].lower() not in \
+                        list(
+                            LexicalCategory.objects.values_list(
+                                'name', flat=True
+                            )
+                        ):
                     lexical_entry = LexicalEntry.from_dict(
                         word,
-                        LexicalCategory.from_dict(entry['lexical_category']),
+                        LexicalCategory.from_dict(
+                            entry['lexical_category'].lower()
+                        ),
                         pronunciation
                     )
                 else:
-                    lexical_entry = LexicalEntry.objects.get(
-                        name=entry['lexical_category']
+                    lexical_entry = LexicalEntry.from_dict(
+                        word,
+                        LexicalCategory.objects.get(
+                            name=entry['lexical_category'].lower()
+                        ),
+                        pronunciation
                     )
                 for sense in entry['senses']:
                     Sense.from_dict(lexical_entry, sense)
