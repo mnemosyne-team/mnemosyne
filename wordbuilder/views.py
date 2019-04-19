@@ -110,3 +110,17 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             form.add_error('email', 'User with this email already exists')
             return self.form_invalid(form)
         return super(ProfileUpdateView, self).form_valid(form)
+
+
+class ProgressUpdateAjaxView(LoginRequiredMixin, TemplateView):
+    template_name = None
+
+    def post(self, request):
+        trained_words = request.POST.get('successfully_trained')
+        for word in trained_words:
+            user_word = self.request.user.dictionary.words.filter(
+                word__name=word
+            ).first()
+            if user_word.study_progress < 100:
+                user_word.study_progress += 25
+                user_word.save()
