@@ -23,7 +23,14 @@ function init() {
            },
             submit: function (event) {
                 // const senseId = $('#word-modal form input[type="radio"]:checked').data('sense-id');
-                $('#word-modal form')[0].submit();
+                const senseId = event.currentTarget.dataset.senseId;
+                const form = document.querySelector('#word-modal form');
+                const senseInput = document.createElement('input');
+                senseInput.setAttribute('name', 'sense');
+                senseInput.setAttribute('type', 'hidden');
+                senseInput.setAttribute('value', `${senseId}`);
+                form.appendChild(senseInput);
+                form.submit();
             }
         },
         mounted: function () {
@@ -40,6 +47,7 @@ function init() {
     $('.pronunciation').click((event) => {handlePronunciation(event);});
 
     $('a.delete').click((event) => {
+        event.preventDefault();
         const wordEntryId = $(event.currentTarget).data('item-id');
         const userWordId = $(event.currentTarget).data('user-word-id');
 

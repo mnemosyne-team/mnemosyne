@@ -40,19 +40,29 @@ input[type=search]:focus::placeholder {
     left: 0;
     top: 0;
     overflow-y: hidden;
+    overflow-x: hidden;
 }
+
+#btn-modal-close {
+    margin: 5px 30px 5px 0;
+}
+#word-modal.modal-header {
+    position: fixed;
+}
+
 #modal-content {
     max-height: calc(100% - 100px);
     padding: 0;
     height: 100%;
+    overflow-y: auto;
 }
 #modal-content > .collapsible {
     margin: 0;
     height: 100%;
-    overflow-y: auto;
 }
 .collapsible .collapsible-body {
     padding: 14px;
+    overflow-y: auto;
 }
 #modal-content > .collapsible .collapsible-body {
     padding: 0;

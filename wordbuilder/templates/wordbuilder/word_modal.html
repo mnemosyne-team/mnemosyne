@@ -1,8 +1,13 @@
 {% verbatim %}
-<div id="word-modal" class="modal modal-fixed-footer">
+<div id="word-modal" class="modal">
 
     <div class="modal-header red lighten-2 yellow-text text-accent-2">
-        <h3 class="modal-header center">{{ word.text }}</h3>
+        <div class="row">
+            <a id="btn-modal-close" class="btn-floating modal-close right red lighten-2 waves-effect waves-light">
+                <i class="material-icons">close</i>
+            </a>
+            <h3 class="center">{{ word.text }}</h3>
+        </div>
     </div>
 
     <!-- Modal content -->
@@ -38,12 +43,14 @@
                 <!-- Collapsible body -->
                 <div class="collapsible-body">
                     <ul class="collection">
-                        <li class="collection-item red lighten-5" v-for="sense in lexicalEntry.senses">
+                        <li class="collection-item" v-for="sense in lexicalEntry.senses">
                             <div>
-                                <label class="right">
-                                    <input type="radio" name="sense" :value="sense.id" required>
-                                    <span>Select sense</span>
-                                </label>
+                                <a v-on:click="submit"
+                                   class="modal-close waves-effect waves-green btn-floating right red lighten-2"
+                                     :data-sense-id="sense.id">
+                                    <i class="material-icons">add</i>
+                                </a>
+
                             </div>
                             <div class="def">Definitions:</div>
                             <ul>
@@ -64,17 +71,6 @@
         </form>
     </div>
     <!-- Modal content end -->
-
-    <!-- Modal footer -->
-    <div class="modal-footer">
-        <a class="modal-close waves-effect waves-green btn-floating red left">
-            <i class="material-icons">close</i>
-        </a>
-        <a v-on:click="submit" class="modal-close waves-effect waves-green btn-floating red">
-            <i class="material-icons">add</i>
-        </a>
-    </div>
-    <!-- Modal footer end -->
 
 </div>
 {% endverbatim %}
