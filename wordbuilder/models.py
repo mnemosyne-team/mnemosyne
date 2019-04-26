@@ -251,6 +251,28 @@ class Dictionary(models.Model):
         return f'dictionary of {self.user}'
 
 
+class Category(models.Model):
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f'Category {self.name}'
+
+
+class WordSet(models.Model):
+    title = models.CharField(max_length=30)
+    image = models.ImageField(null=True, blank=True)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name='word_set'
+    )
+
+    def __str__(self):
+        return f'WordSet {self.title}'
+
+
 class UserWord(models.Model):
     class Meta:
         ordering = ('-added',)
@@ -273,6 +295,10 @@ class UserWord(models.Model):
     )
     study_progress = models.IntegerField(default=0)
     added = models.DateTimeField(default=datetime.datetime.utcnow)
+    word_set = models.ForeignKey(
+        WordSet, on_delete=models.CASCADE, related_name='user_words',
+        blank=True, null=True
+    )
 
     def __str__(self):
         return str(self.word)

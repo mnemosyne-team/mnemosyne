@@ -1,0 +1,91 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load static %}
+
+{% block title %}Mnemosyne - Collection{% endblock %}
+
+{% block custom_css %}
+    <link href="{% static 'wordbuilder/css/dictionary.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <h5 style="text-align: center">{{ wordset.title }}</h5><br>
+    <div class="container">
+        <div class="row">
+        {% if not wordset_words %}
+            <p style="text-align: center">Sorry, no words in this wordset for now. Wait for updates!</p>
+        {% else %}
+            <form method="post">
+                <div class="row" style="margin-bottom: 15px; margin-right: 35px">
+                    <button class="btn-floating tooltipped waves-effect waves-teal red lighten-2 right"
+                            data-position="top" data-tooltip="Select all"
+                            value="true" type="button" onclick="toggle(this)">
+                        <i class="material-icons">check_circle</i>
+                    </button>
+                </div>
+                {% csrf_token %}
+                <ul class="collection">
+                    {% for word in wordset_words %}
+                        <li id="word-entry-{{ word.id }}" class="collection-item red lighten-2">
+                            <div class="row">
+                                <div class="col s12">
+                                    <div>
+                                        <a class="pronunciation tooltipped"
+                                            data-position="top" data-tooltip="[{{ word.pronunciation.phonetic_spelling }}]"
+                                            data-pronunciation-url="{{ word.pronunciation.audio }}">
+                                            <i class="small material-icons left">volume_up</i>
+                                        </a>
+                                        <span class="word yellow-text text-accent-2">{{ word.word.name }}</span>
+                                        <span class="pros blue-text text-lighten-4 ">{{ word.lexical_category.name|lower }}</span>
+                                        {% if not user_own_words %}
+                                            <label class="right">
+                                                <input type="checkbox" class="filled-in checkbox-white" name="choices" value="{{ word.id }}"/>
+                                                <span></span>
+                                            </label>
+                                        {% else %}
+                                            {% if word.word.name not in user_words_names %}
+                                                {% if word.sense.definitions.text not in user_words_senses %}
+                                                    <label class="right">
+                                                        <input type="checkbox" class="filled-in checkbox-white" name="choices" value="{{ word.id }}"/>
+                                                        <span></span>
+                                                    </label>
+                                                {% else %}
+                                                    <i class="right" style="color: white">Added</i>
+                                                {% endif %}
+                                            {% else %}
+                                                <i class="right" style="color: white">Added</i>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <ul class="collapsible">
+                                        <li>
+                                            <div class="collapsible-header">
+                                                {{ word.sense.definitions.first.text }}
+                                            </div>
+                                            <div class="collapsible-body white">
+                                                <ol>{% for example in word.sense.examples.all %}
+                                                    <li>{{ example.text }}</li>
+                                                {% endfor %}
+                                                </ol>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button class="btn waves-effect waves-teal red lighten-2 right" type="submit">Add checked words</button>
+            </form>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'wordbuilder/js/word_set_word.js' %}"></script>
+{% endblock %}

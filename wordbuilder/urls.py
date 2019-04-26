@@ -31,4 +31,9 @@ urlpatterns = [
 
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile-update/', views.ProfileUpdateView.as_view(), name='profile_update'),
+    path('wordsets/', views.WordSetView.as_view(), name='wordsets'),
+    path('add-wordset/', views.WordSetCreateView.as_view(), name='add_wordset'),
+    path('update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(), name='update_wordset'),
+    path('catalog/', views.CatalogView.as_view(), name='catalog'),
+    path('catalog/<int:word_set_id>', views.WordSetDetailView.as_view(), name='wordset_detail'),
 ]

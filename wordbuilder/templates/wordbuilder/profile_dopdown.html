@@ -3,5 +3,9 @@
     <li class="divider"></li>
     <li><a href="#">My progress</a></li>
     <li class="divider"></li>
+    {% if user.is_staff %}
+        <li><a href="{% url 'wordsets' %}">Wordsets</a></li>
+        <li class="divider"></li>
+    {% endif %}
     <li><a href="{% url 'logout' %}">Log out</a></li>
 </ul>

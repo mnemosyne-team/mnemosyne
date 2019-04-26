@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'wordbuilder.apps.WordbuilderConfig',
     'widget_tweaks',
+    'materializecssform',
 ]
 
 MIDDLEWARE = [

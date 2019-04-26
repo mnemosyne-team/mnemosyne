@@ -1,0 +1,48 @@
+{% extends 'wordbuilder/base.html' %}
+{% load widget_tweaks %}
+{% load materializecss %}
+
+{% block title %}Mnemosyne - Create wordset{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h4 style="text-align: center">Wordsets</h4>
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% ifnotequal field.label 'Words' %}
+                            {{ field|materializecss }}
+                        {% else %}
+                            <table class="striped centered">
+                                <thead>
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Description</th>
+                                    <th>Add to wordset?</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for userword in field.field.queryset %}
+                                    <tr>
+                                        <td>{{ userword.word.name }}</td>
+                                        <td>{{ userword.sense.definitions.first.text }}</td>
+                                        <td>
+                                            <label>
+                                                <input type="checkbox" name="words" value="{{ userword.id }}"/>
+                                                <span></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endifnotequal %}
+                    {% endfor %}
+                    <button class="btn waves-effect waves-teal red lighten-2" type="submit">Add wordset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
