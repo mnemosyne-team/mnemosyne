@@ -302,3 +302,13 @@ class UserWord(models.Model):
 
     def __str__(self):
         return str(self.word)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'word': self.word.name,
+            'lexical_category': self.lexical_category.to_dict(),
+            'pronunciation': self.pronunciation.to_dict(),
+            'sense': self.sense.to_dict(),
+            'study_progress': self.study_progress
+        }

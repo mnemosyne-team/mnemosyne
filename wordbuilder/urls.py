@@ -12,6 +12,7 @@ urlpatterns = [
     path('dictionary/', views.DictionaryView.as_view(), name='dictionary'),
     path('words/<str:word>/', views.WordDataView.as_view(), name='word_data'),
     path('user_words/', views.UserWordView.as_view(), name='user_words'),
+    path('user_words/<str:category>/', views.UserWordView.as_view(), name='get_user_words'),
     path('reset-password/',
          PasswordResetView.as_view(template_name='registration/password-reset-form.html',
                                    email_template_name='registration/password-reset-email.html'),
@@ -31,6 +32,9 @@ urlpatterns = [
 
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile-update/', views.ProfileUpdateView.as_view(), name='profile_update'),
+    path('update_word_progress/', views.ProgressUpdateAjaxView.as_view(), name='update_word_progress'),
+    path('trainings/', views.TrainingsView.as_view(), name='trainings'),
+    path('trainings/word_constructor/<str:category>/', views.WordConstructorView.as_view(), name='word_constructor'),
     path('wordsets/', views.WordSetView.as_view(), name='wordsets'),
     path('add-wordset/', views.WordSetCreateView.as_view(), name='add_wordset'),
     path('update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(), name='update_wordset'),

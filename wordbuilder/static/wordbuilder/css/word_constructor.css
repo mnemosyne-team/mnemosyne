@@ -1,0 +1,15 @@
+.pronunciation {
+  visibility: hidden;
+}
+
+.card .card-content .pronunciation p {
+  margin: 10px 0px;
+}
+
+#next {
+  display: none;
+}
+
+.word-counter {
+  margin-top: 20px;
+}

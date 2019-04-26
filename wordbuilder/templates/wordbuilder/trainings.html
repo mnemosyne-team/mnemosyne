@@ -1,0 +1,44 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block title %}Trainings{% endblock %}
+
+{% block custom_css %}
+    <style>
+        .input-field {
+            margin-top: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+           <div class="col s12 m8 offset-m2 l6 offset-l3 center">
+               <div class="input-field">
+                   <select>
+                       <option value="0" selected>All words</option>
+                       {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                       {% endfor %}
+                    </select>
+                    <label>Words to train</label>
+                </div>
+                {% include 'wordbuilder/training_card.html' with training_name='Word constructor' %}
+           </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+        $(document).ready(function() {
+          $('select').formSelect();
+
+          $('button').click(event => {
+              const category = $('select option:selected').text().toLowerCase().replace(' ', '_');
+              console.log(category);
+              window.location.replace(`${window.location.origin}/trainings/word_constructor/${category}/`);
+          });
+        });
+    </script>
+{% endblock %}

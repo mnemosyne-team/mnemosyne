@@ -1,0 +1,50 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load static %}
+
+{% block title %}Word constructor{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'wordbuilder/css/word_constructor.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="word-counter center">
+            <span class="word-num"></span>
+        </div>
+      <div class="progress red lighten-4">
+        <div class="determinate red lighten-2" style="width: 0%"></div>
+      </div>
+      <div class="card">
+        <div class="card-content center">
+          <div class="row">
+            <span class="word-progress right"></span>
+          </div>
+          <p class="definition"></p>
+          <div class="input">
+
+          </div>
+          <div class="pronunciation">
+            <p class="pronunciation-spelling"></p>
+            <button class="pronunciation-audio btn-floating red lighten-2" data-pronunciation-url="">
+                <i class="material-icons">volume_up</i>
+            </button>
+          </div>
+        </div>
+        <div class="card-action center">
+          <button id="show-answer" class="btn waves-effect waves-ligth red lighten-2">I don't know</button>
+          <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
+        </div>
+          <input type="hidden" name="category" value="{{ category }}">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'wordbuilder/js/word_constructor.js' %}"></script>
+{% endblock %}

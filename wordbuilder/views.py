@@ -1,4 +1,5 @@
 import json
+import random
 
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
@@ -57,6 +58,15 @@ class WordDataView(LoginRequiredMixin, View):
 
 
 class UserWordView(LoginRequiredMixin, View):
+    def get(self, request, category):
+        response = {'words': []}
+        if category == 'all_words':
+            for word in request.user.dictionary.words.all():
+                response['words'].append(word.to_dict())
+
+        random.shuffle(response['words'])
+        return JsonResponse(response, status=200)
+
     def post(self, request):
         sense_id = request.POST.get('sense')
         sense = Sense.objects.get(pk=sense_id) if sense_id else None
@@ -85,8 +95,8 @@ class UserWordView(LoginRequiredMixin, View):
             return HttpResponse(status=204)
         except Exception as e:
             return HttpResponseBadRequest()
-          
-          
+
+
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'wordbuilder/profile-view.html'
@@ -285,15 +295,34 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('wordsets')
 
     
-class ProgressUpdateAjaxView(LoginRequiredMixin, TemplateView):
-    template_name = None
+class ProgressUpdateAjaxView(LoginRequiredMixin, View):
 
     def post(self, request):
-        trained_words = request.POST.get('successfully_trained')
+        trained_words = json.loads(request.body.decode('utf-8')).get('words')
         for word in trained_words:
             user_word = self.request.user.dictionary.words.filter(
-                word__name=word
+                word__name=word['word'].lower()
             ).first()
-            if user_word.study_progress < 100:
+            if word['isSuccessfullyTrained'] and user_word.study_progress < 100:
                 user_word.study_progress += 25
                 user_word.save()
+            elif not word['isSuccessfullyTrained'] and user_word.study_progress > 0:
+                user_word.study_progress -= 25
+                user_word.save()
+        return JsonResponse({}, status=200)
+
+
+class TrainingsView(TemplateView):
+    template_name = 'wordbuilder/trainings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class WordConstructorView(TemplateView):
+    template_name = 'wordbuilder/word_constructor.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
