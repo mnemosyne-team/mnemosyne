@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 import json
 import random
 
@@ -10,7 +11,7 @@ from django.http import (
     JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 )
 
-from wordbuilder.models import Dictionary, Word, Sense, UserWord, WordSet, Category
+from wordbuilder.models import Dictionary, Word, Sense, UserWord, WordSet, Category, Statistics
 from wordbuilder.utils import get_word_data
 from wordbuilder.forms import SignUpForm, ProfileUpdateForm, WordSetCreateForm, WordSetUpdateForm
 
@@ -28,6 +29,7 @@ class SignUpView(FormView):
         form.save()
         user = User.objects.get(username=form.cleaned_data['username'])
         Dictionary.objects.create(user=user)
+        Statistics.objects.create(user=user)
         return redirect(self.success_url)
 
 
@@ -305,6 +307,8 @@ class ProgressUpdateAjaxView(LoginRequiredMixin, View):
             ).first()
             if word['isSuccessfullyTrained'] and user_word.study_progress < 100:
                 user_word.study_progress += 25
+                if user_word.study_progress == 100:
+                    user_word.learn_date = date.today()
                 user_word.save()
             elif not word['isSuccessfullyTrained'] and user_word.study_progress > 0:
                 user_word.study_progress -= 25
@@ -325,4 +329,39 @@ class WordConstructorView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        return context
+
+
+class StatisticsView(TemplateView):
+    template_name = 'wordbuilder/statistics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(username=self.request.user.username)
+        user_stats = Statistics.objects.get(user=user)
+
+        user_words = UserWord.objects.filter(dictionary__user=user, learn_date__isnull=False)
+
+        learned_words = UserWord.objects.filter(dictionary__user=user, study_progress__exact=100).count()
+        words_to_learn = UserWord.objects.filter(dictionary__user=user, study_progress__lt=100).count()
+
+        weekly_words = []
+        week_days = []
+        for delta in range(7):
+            weekly_words.append(
+                user_words.filter(
+                    learn_date=date.today() - timedelta(days=delta)
+                ).count()
+            )
+            week_days.append(
+                (date.today() - timedelta(days=delta)).strftime("%d %b %Y")
+            )
+
+        context['learned_words'] = learned_words
+        context['words_to_learn'] = words_to_learn
+        context['day_streak'] = user_stats.day_streak
+        context['record_day_streak'] = user_stats.record_day_streak
+        context['weekly_words'] = weekly_words
+        context['week_days'] = week_days
+
         return context

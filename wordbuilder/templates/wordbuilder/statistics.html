@@ -1,0 +1,82 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block title %}Mnemosyne - Statistics{% endblock %}
+
+{% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <h5 style="text-align: center">Statistics</h5><br>
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+                <table class="striped centered">
+                    <tr>
+                        <th>Learned words</th>
+                        <td>{{ learned_words }}</td>
+                    </tr>
+                    <tr>
+                        <th>Words yet to learn</th>
+                        <td>{{ words_to_learn }}</td>
+                    </tr>
+                    <tr>
+                        <th>Current day streak</th>
+                        <td>{{ day_streak }}</td>
+                    </tr>
+                    <tr>
+                        <th>Highest day streak</th>
+                        <td>{{ record_day_streak }}</td>
+                    </tr>
+                </table>
+                <canvas id="myChart" width="400" height="350"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [
+                                {% for day in week_days reversed %}
+                                    '{{ day }}',
+                                {% endfor %}
+                            ],
+                            datasets: [{
+                                label: 'Words learned',
+                                data: [
+                                    {% for count in weekly_words reversed %}
+                                        {{ count }},
+                                    {% endfor %}
+                                ],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(0, 255, 0, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(0, 128, 0, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}

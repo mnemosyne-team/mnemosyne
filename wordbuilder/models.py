@@ -295,6 +295,7 @@ class UserWord(models.Model):
     )
     study_progress = models.IntegerField(default=0)
     added = models.DateTimeField(default=datetime.datetime.utcnow)
+    learn_date = models.DateTimeField(blank=True, null=True)
     word_set = models.ForeignKey(
         WordSet, on_delete=models.CASCADE, related_name='user_words',
         blank=True, null=True
@@ -312,3 +313,14 @@ class UserWord(models.Model):
             'sense': self.sense.to_dict(),
             'study_progress': self.study_progress
         }
+
+
+class Statistics(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_statistics'
+    )
+    last_training = models.DateField(null=True, blank=True)
+    day_streak = models.IntegerField(default=0)
+    record_day_streak = models.IntegerField(default=0)
