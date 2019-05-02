@@ -17,8 +17,8 @@
                <div class="input-field">
                    <select>
                        <option value="0" selected>All words</option>
-                       {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
+                       {% for wordset in wordsets %}
+                            <option value="{{ wordset.id }}">{{ wordset.title }}</option>
                        {% endfor %}
                     </select>
                     <label>Words to train</label>
@@ -35,9 +35,8 @@
           $('select').formSelect();
 
           $('button').click(event => {
-              const category = $('select option:selected').text().toLowerCase().replace(' ', '_');
-              console.log(category);
-              window.location.replace(`${window.location.origin}/trainings/word_constructor/${category}/`);
+              const wordSetPk = $('select option:selected').val();
+              window.location.replace(`${window.location.origin}/trainings/word_constructor/${wordSetPk}/`);
           });
         });
     </script>

@@ -12,7 +12,7 @@ urlpatterns = [
     path('dictionary/', views.DictionaryView.as_view(), name='dictionary'),
     path('words/<str:word>/', views.WordDataView.as_view(), name='word_data'),
     path('user_words/', views.UserWordView.as_view(), name='user_words'),
-    path('user_words/<str:category>/', views.UserWordView.as_view(), name='get_user_words'),
+    path('user_words/<int:word_set_pk>/', views.UserWordView.as_view(), name='get_user_words'),
     path('reset-password/',
          PasswordResetView.as_view(template_name='registration/password-reset-form.html',
                                    email_template_name='registration/password-reset-email.html'),

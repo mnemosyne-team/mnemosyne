@@ -21,7 +21,7 @@
       <div class="card">
         <div class="card-content center">
           <div class="row">
-            <span class="word-progress right"></span>
+            <span class="word-progress right tooltipped" data-position="top" data-tooltip=""></span>
           </div>
           <p class="definition"></p>
           <div class="input">
@@ -35,7 +35,8 @@
           </div>
         </div>
         <div class="card-action center">
-          <button id="show-answer" class="btn waves-effect waves-ligth red lighten-2">I don't know</button>
+          <button id="show-answer" class="btn waves-effect waves-light red lighten-2">I don't know</button>
+            <span class="blue-grey-text text-lighten-2">Enter</span>
           <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
         </div>
           <input type="hidden" name="category" value="{{ category }}">
@@ -46,5 +47,28 @@
 {% endblock %}
 
 {% block custom_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    {% verbatim %}
+    <script id="result-template" type="text/x-handlebars-template">
+        <table class="striped">
+            <tr>
+                <td><b>Successfully trained words</b></td>
+            </tr>
+            {{#each  successfullyTrainedWords}}
+                <tr>
+                    <td class="green-text text-lighten-1">{{ this }}</td>
+                </tr>
+            {{/each}}
+            <tr>
+                <td><b>Unsuccessfully trained words</b></td>
+            </tr>
+            {{#each unsuccessfullyTrainedWords}}
+                <tr>
+                    <td class="red-text text-lighten-2">{{ this }}</td>
+                </tr>
+            {{/each }}
+        </table>
+    </script>
+    {% endverbatim %}
     <script src="{% static 'wordbuilder/js/word_constructor.js' %}"></script>
 {% endblock %}

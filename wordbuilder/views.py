@@ -60,10 +60,13 @@ class WordDataView(LoginRequiredMixin, View):
 
 
 class UserWordView(LoginRequiredMixin, View):
-    def get(self, request, category):
+    def get(self, request, word_set_pk):
         response = {'words': []}
-        if category == 'all_words':
-            for word in request.user.dictionary.words.all():
+        if word_set_pk == 0:
+            for word in request.user.dictionary.words.all()[:10]:
+                response['words'].append(word.to_dict())
+        else:
+            for word in request.user.dictionary.words.filter(word_set__pk=word_set_pk).all()[:10]:
                 response['words'].append(word.to_dict())
 
         random.shuffle(response['words'])
@@ -316,15 +319,20 @@ class ProgressUpdateAjaxView(LoginRequiredMixin, View):
         return JsonResponse({}, status=200)
 
 
-class TrainingsView(TemplateView):
+class TrainingsView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/trainings.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        wordset_ids = self.request.user.dictionary.words.values_list('word_set', flat=True).filter(
+            word_set__isnull=False
+        ).order_by('word_set').distinct()
+        wordsets = WordSet.objects.filter(pk__in=wordset_ids)
+        context['wordsets'] = wordsets
         return context
 
 
-class WordConstructorView(TemplateView):
+class WordConstructorView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/word_constructor.html'
 
     def get_context_data(self, **kwargs):

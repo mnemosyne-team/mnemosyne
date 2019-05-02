@@ -1,4 +1,5 @@
 let words = [];
+let trainedWords = {successfullyTrainedWords: [], unsuccessfullyTrainedWords: []};
 let currentWordIndex = 0;
 const MAX_TYPOS = 3;
 let currentTypoCount = 0;
@@ -50,6 +51,7 @@ $(document).ready(() => {
 
   $('#show-answer').click(event => {
     const word = words[currentWordIndex].word.toUpperCase();
+    $($('.char-input')[0]).attr('readonly', true);
     for (let letterIndex in word) {
       const charInput = $(`input#char-${letterIndex}`);
       charInput.val(word[letterIndex]);
@@ -61,9 +63,21 @@ $(document).ready(() => {
     togglePronunciation();
     toggleButtons();
     playAudio($('.pronunciation-audio').data('pronunciation-url'));
+    trainedWords.unsuccessfullyTrainedWords.push(word)
   });
 
   document.addEventListener('keydown', function (event) {
+    if (event.keyCode === 13) {
+        const showAnswer = $('#show-answer');
+        if (showAnswer.css('display') === 'inline-block') {
+          showAnswer.trigger('click');
+          return;
+        } else {
+          $('#next').trigger('click');
+          return;
+        }
+    }
+
     const word = words[currentWordIndex].word.toUpperCase();
 
     for (let charInput of $('.char-input')) {
@@ -74,15 +88,24 @@ $(document).ready(() => {
       }
 
       if (charInputObj.val().length === 0) {
-        if (String.fromCharCode(event.keyCode) === word[Number(charInputObj.data('char-pos'))]) {
+        const charPos = Number(charInputObj.data('char-pos'));
+        if (String.fromCharCode(event.keyCode) === word[charPos]) {
           charInputObj.val(String.fromCharCode(event.keyCode));
           charInputObj.addClass('valid');
+          charInputObj.attr('readonly', true);
+          $(`#char-${charPos + 1}`).attr('readonly', false);
           if (Number(charInputObj.data('char-pos')) === word.length - 1) {
             togglePronunciation();
             playAudio($('.pronunciation-audio').data('pronunciation-url'));
             toggleButtons();
             updateWordProgress(words[currentWordIndex]);
-            saveWordProgress(word, currentTypoCount < MAX_TYPOS);
+            const isSuccessfullyTrained = currentTypoCount < MAX_TYPOS;
+            saveWordProgress(word, isSuccessfullyTrained);
+            if (isSuccessfullyTrained) {
+              trainedWords.successfullyTrainedWords.push(word);
+            } else {
+              trainedWords.unsuccessfullyTrainedWords.push(word);
+            }
           }
         } else {
           currentTypoCount++;
@@ -104,8 +127,46 @@ $(document).ready(() => {
       togglePronunciation();
       updateCard(currentWord);
       currentTypoCount = 0;
+    } else if (currentWordIndex === words.length - 1) {
+      showResults();
     }
   });
+
+  function showResults() {
+      $('.word-counter').css('visibility', 'hidden');
+      $('.progress').css('visibility', 'hidden');
+      const source = $('#result-template').html();
+      const template = Handlebars.compile(source);
+      const html = template(trainedWords);
+      $('.card-content').html(html);
+      displayResultButtons();
+  }
+
+  function displayResultButtons() {
+    const continueTraining = document.createElement('button');
+    const backToTrainings  = document.createElement('button');
+
+    $(continueTraining).addClass('btn waves-effect waves-light red lighten-2');
+    $(backToTrainings).addClass('btn waves-effect waves-light red lighten-2');
+
+    $(continueTraining).html('Continue training');
+    $(backToTrainings).html('To the list of trainings');
+
+    $(continueTraining).css('margin-bottom', '20px');
+
+    $('.card-action').html('');
+
+    $('.card-action').append(continueTraining);
+    $('.card-action').append(backToTrainings);
+
+    $(continueTraining).click(event => {
+      window.location.replace(window.location.href);
+    });
+
+    $(backToTrainings).click(event => {
+      window.location.replace(`${window.origin}/trainings/`);
+    });
+  }
 
   function updateWordProgress(word) {
       const wordProgress = $('.word-progress');
@@ -114,6 +175,7 @@ $(document).ready(() => {
       } else if (word.study_progress > 0 && currentTypoCount >= MAX_TYPOS) {
         wordProgress.text(`${word.study_progress - 25}%`);
       }
+      $('.tooltipped')[0].dataset.tooltip = `Word progress: ${wordProgress.text()}`;
   }
 
   function togglePronunciation() {
@@ -138,6 +200,7 @@ $(document).ready(() => {
     initWordProgress(word);
     updateProgressBar(currentWordIndex);
     updateWordNum();
+    $($('.char-input')[0]).attr('readonly', false);
   }
 
   function updatePronunciation(word) {
@@ -150,7 +213,10 @@ $(document).ready(() => {
   }
 
   function initWordProgress(word) {
-    $('.word-progress').text(`${word.study_progress}%`);
+    const wordProgress = $('.word-progress');
+    wordProgress.text(`${word.study_progress}%`);
+    $('.tooltipped')[0].dataset.tooltip = `Word progress: ${word.study_progress}%`;
+    $('.tooltipped').tooltip();
   }
 
   function updateProgressBar() {
@@ -168,6 +234,12 @@ $(document).ready(() => {
       .then(data => {
         words = data.words;
         updateCard(words[currentWordIndex]);
+        $('.char-input').on('input', function() {
+          const charPos = Number($(this).data('char-pos'));
+          if (words[currentWordIndex][charPos] !== $(this).val().toUpperCase()) {
+            $(this).val('');
+          }
+        });
       });
 
 });

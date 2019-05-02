@@ -14,13 +14,13 @@ input[type=search]:focus::placeholder {
 .delete {
     color: white;
 }
-.def, .example {
+.def, .example, .word-progress {
     font-size: 1.2rem;
 }
 .word, .pros {
     font-size: 1.5rem;
 }
-.word {
+.word, .pros {
     margin-right: 10px;
 }
 .row {
