@@ -37,18 +37,27 @@ function displayResultButtons() {
     const continueTraining = document.createElement('button');
     const backToTrainings  = document.createElement('button');
 
+    const row1 = document.createElement('div');
+    const row2 = document.createElement('div');
+
+    $(row1).addClass('row center');
+    $(row2).addClass('row center');
+
     $(continueTraining).addClass('btn waves-effect waves-light red lighten-2');
     $(backToTrainings).addClass('btn waves-effect waves-light red lighten-2');
 
     $(continueTraining).html('Continue training');
     $(backToTrainings).html('To the list of trainings');
 
-    $(continueTraining).css('margin-bottom', '20px');
+    const cardAction = $('.card-action');
 
-    $('.card-action').html('');
+    cardAction.html('');
 
-    $('.card-action').append(continueTraining);
-    $('.card-action').append(backToTrainings);
+    $(row1).append(continueTraining);
+    $(row2).append(backToTrainings);
+
+    cardAction.append(row1);
+    cardAction.append(row2);
 
     $(continueTraining).click(event => {
         window.location.replace(window.location.href);
