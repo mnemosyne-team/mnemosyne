@@ -1,0 +1,47 @@
+{% extends 'wordbuilder/training_tmp.html' %}
+
+{% load static %}
+
+{% block training-css %}
+    <link rel="stylesheet" href="{% static 'wordbuilder/css/pronunciation.css' %}">
+{% endblock %}
+
+{% block card-content %}
+    <button class="record btn-floating btn-large red lighten-2"><i class="large material-icons white-text">mic</i></button>
+    <div class="blue-grey-text text-lighten-2">Space</div>
+    <div class="row center">
+        <span id="pronunciation"></span>
+    </div>
+    <div class="row">
+        <span class="word"></span>
+    </div>
+    <div class="row center">
+        <div>
+            <span class="userWord correct"></span>
+        </div>
+        <div class="preloader-wrapper small">
+            <div class="spinner-layer spinner-red-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block card-action %}
+    <span class="blue-grey-text text-lighten-2">Enter</span>
+    <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
+    <input type="hidden" name="category" value="{{ category }}">
+{% endblock %}
+
+{% block training-js %}
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+    <script src="{% static 'wordbuilder/js/pronunciation.js' %}"></script>
+{% endblock %}

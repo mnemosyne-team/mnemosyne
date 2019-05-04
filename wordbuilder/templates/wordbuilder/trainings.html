@@ -23,7 +23,8 @@
                     </select>
                     <label>Words to train</label>
                 </div>
-                {% include 'wordbuilder/training_card.html' with training_name='Word constructor' %}
+                {% include 'wordbuilder/training_card.html' with training_name='Word constructor' url_name='word_constructor' %}
+                {% include 'wordbuilder/training_card.html' with training_name='Pronunciation' url_name='pronunciation' %}
            </div>
         </div>
     </div>
@@ -36,7 +37,8 @@
 
           $('button').click(event => {
               const wordSetPk = $('select option:selected').val();
-              window.location.replace(`${window.location.origin}/trainings/word_constructor/${wordSetPk}/`);
+              const urlName = event.currentTarget.dataset.urlName;
+              window.location.replace(`${window.location.origin}/trainings/${urlName}/${wordSetPk}/`);
           });
         });
     </script>

@@ -1,0 +1,51 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {% block training-css %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+
+            <div class="word-counter center" style="margin-top: 20px;">
+                <span class="word-num"></span>
+            </div>
+
+            <div class="progress red lighten-4">
+                <div class="determinate red lighten-2" style="width: 0%"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-content center">
+                    <div class="row">
+                        <span class="word-progress right tooltipped" data-position="top" data-tooltip=""></span>
+                    </div>
+
+                    {% block card-content %}
+                    {% endblock %}
+                </div>
+
+                <div class="card-action center">
+                    {% block card-action %}
+                    {% endblock %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    {% include 'wordbuilder/training_result.html' %}
+    <script src="{% static 'wordbuilder/js/utils.js' %}"></script>
+
+    {% block training-js %}
+    {% endblock %}
+{% endblock %}

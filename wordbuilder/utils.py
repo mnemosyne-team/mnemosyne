@@ -1,16 +1,17 @@
 import os
 import typing
 import requests
+import json
 
 
-BASE_API_URL = os.environ.get('OXFORD_API_URL')
+OXFORD_API_URL = os.environ.get('OXFORD_API_URL')
 
 
 def get_word_data(word: str) -> typing.Optional[typing.Dict]:
 	result = {}
 	try:
 		response = requests.get(
-			f'{BASE_API_URL}/entries/en/{word.lower()}/regions=us',
+			f'{OXFORD_API_URL}/entries/en/{word.lower()}/regions=us',
 			headers={
 				'app_id': os.environ.get('OXFORD_APP_ID'),
 				'app_key': os.environ.get('OXFORD_APP_KEY')
@@ -68,3 +69,22 @@ def get_word_data(word: str) -> typing.Optional[typing.Dict]:
 		return None
 
 	return result
+
+
+def get_text(audio, lang='en-US', format='detailed'):
+	params = f'language={lang}&format={format}'
+	url = f'{os.environ.get("MICROSOFT_SPEECH_API_URL")}?{params}'
+	headers = {
+		'Accept': 'application/json',
+		'Ocp-Apim-Subscription-Key': os.environ.get('MICROSOFT_SPEECH_API_KEY'),
+		'Transfer-Encoding': 'chunked',
+		'Content-type': 'audio/wav; codec=audio/pcm; samplerate=16000'
+	}
+	r = requests.post(url, headers=headers, data=stream_audio_file(audio))
+	results = json.loads(r.content)
+	return results
+
+
+def stream_audio_file(speech_file):
+	for chunk in speech_file:
+		yield chunk

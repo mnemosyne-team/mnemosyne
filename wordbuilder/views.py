@@ -12,7 +12,7 @@ from django.http import (
 )
 
 from wordbuilder.models import Dictionary, Word, Sense, UserWord, WordSet, Category, Statistics
-from wordbuilder.utils import get_word_data
+from wordbuilder.utils import get_word_data, get_text
 from wordbuilder.forms import SignUpForm, ProfileUpdateForm, WordSetCreateForm, WordSetUpdateForm
 
 
@@ -335,9 +335,13 @@ class TrainingsView(LoginRequiredMixin, TemplateView):
 class WordConstructorView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/word_constructor.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+
+class PronunciationView(LoginRequiredMixin, TemplateView):
+    template_name = 'wordbuilder/pronunciation_training.html'
+
+    def post(self, request, category):
+        result = get_text(request.FILES['audio_data'])
+        return JsonResponse(result, status=200)
 
 
 class StatisticsView(TemplateView):

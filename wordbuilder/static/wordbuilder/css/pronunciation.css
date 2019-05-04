@@ -1,0 +1,12 @@
+.correct {
+    color: #009688;
+}
+
+.incorrect {
+    color: #e57373;
+    text-decoration: line-through;
+}
+
+.word, .userWord {
+   font-size: 1.2rem;
+}

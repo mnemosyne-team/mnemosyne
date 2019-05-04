@@ -1,4 +1,4 @@
-{% extends 'wordbuilder/base.html' %}
+{% extends 'wordbuilder/training_tmp.html' %}
 
 {% load static %}
 
@@ -8,67 +8,27 @@
     <link rel="stylesheet" href="{% static 'wordbuilder/css/word_constructor.css' %}">
 {% endblock %}
 
-{% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col s12 m8 offset-m2 l6 offset-l3">
-        <div class="word-counter center">
-            <span class="word-num"></span>
-        </div>
-      <div class="progress red lighten-4">
-        <div class="determinate red lighten-2" style="width: 0%"></div>
-      </div>
-      <div class="card">
-        <div class="card-content center">
-          <div class="row">
-            <span class="word-progress right tooltipped" data-position="top" data-tooltip=""></span>
-          </div>
-          <p class="definition"></p>
-          <div class="input">
+{% block card-content %}
+    <p class="definition"></p>
 
-          </div>
-          <div class="pronunciation">
-            <p class="pronunciation-spelling"></p>
-            <button class="pronunciation-audio btn-floating red lighten-2" data-pronunciation-url="">
-                <i class="material-icons">volume_up</i>
-            </button>
-          </div>
-        </div>
-        <div class="card-action center">
-          <button id="show-answer" class="btn waves-effect waves-light red lighten-2">I don't know</button>
-            <span class="blue-grey-text text-lighten-2">Enter</span>
-          <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
-        </div>
-          <input type="hidden" name="category" value="{{ category }}">
-      </div>
+    <div class="input">
     </div>
-  </div>
-</div>
+
+    <div class="pronunciation">
+        <p class="pronunciation-spelling"></p>
+        <button class="pronunciation-audio btn-floating red lighten-2" data-pronunciation-url="">
+            <i class="material-icons">volume_up</i>
+        </button>
+    </div>
 {% endblock %}
 
-{% block custom_js %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
-    {% verbatim %}
-    <script id="result-template" type="text/x-handlebars-template">
-        <table class="striped">
-            <tr>
-                <td><b>Successfully trained words</b></td>
-            </tr>
-            {{#each  successfullyTrainedWords}}
-                <tr>
-                    <td class="green-text text-lighten-1">{{ this }}</td>
-                </tr>
-            {{/each}}
-            <tr>
-                <td><b>Unsuccessfully trained words</b></td>
-            </tr>
-            {{#each unsuccessfullyTrainedWords}}
-                <tr>
-                    <td class="red-text text-lighten-2">{{ this }}</td>
-                </tr>
-            {{/each }}
-        </table>
-    </script>
-    {% endverbatim %}
+{% block card-action %}
+    <button id="show-answer" class="btn waves-effect waves-light red lighten-2">I don't know</button>
+    <span class="blue-grey-text text-lighten-2">Enter</span>
+    <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
+    <input type="hidden" name="category" value="{{ category }}">
+{% endblock %}
+
+{% block training-js %}
     <script src="{% static 'wordbuilder/js/word_constructor.js' %}"></script>
 {% endblock %}

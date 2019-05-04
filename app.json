@@ -34,6 +34,12 @@
     },
     "OXFORD_APP_KEY": {
       "required": true
+    },
+    "MICROSOFT_SPEECH_API_URL": {
+      "required": true
+    },
+    "MICROSOFT_SPEECH_API_KEY": {
+      "required": true
     }
   },
   "formation": {

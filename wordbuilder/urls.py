@@ -35,6 +35,7 @@ urlpatterns = [
     path('update_word_progress/', views.ProgressUpdateAjaxView.as_view(), name='update_word_progress'),
     path('trainings/', views.TrainingsView.as_view(), name='trainings'),
     path('trainings/word_constructor/<str:category>/', views.WordConstructorView.as_view(), name='word_constructor'),
+    path('trainings/pronunciation/<str:category>/', views.PronunciationView.as_view(), name='pronunciation'),
     path('wordsets/', views.WordSetView.as_view(), name='wordsets'),
     path('add-wordset/', views.WordSetCreateView.as_view(), name='add_wordset'),
     path('update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(), name='update_wordset'),

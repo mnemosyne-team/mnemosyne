@@ -1,0 +1,22 @@
+{% verbatim %}
+<script id="result-template" type="text/x-handlebars-template">
+    <table class="striped">
+        <tr>
+            <td><b>Successfully trained words</b></td>
+        </tr>
+        {{#each  successfullyTrainedWords}}
+        <tr>
+            <td class="green-text text-lighten-1">{{ this }}</td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td><b>Unsuccessfully trained words</b></td>
+        </tr>
+        {{#each unsuccessfullyTrainedWords}}
+        <tr>
+            <td class="red-text text-lighten-2">{{ this }}</td>
+        </tr>
+        {{/each }}
+    </table>
+</script>
+{% endverbatim %}
