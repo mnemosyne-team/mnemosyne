@@ -50,9 +50,12 @@ $(document).ready(() => {
         updateWordProgress(currentWord.study_progress - 25);
     }
 
-    togglePronunciation();
     toggleButtons();
-    playAudio($('.pronunciation-audio').data('pronunciation-url'));
+    if (currentWord.pronunciation) {
+      showPronunciation();
+      playAudio($('.pronunciation-audio').data('pronunciation-url'));
+    }
+
     trainedWords.unsuccessfullyTrainedWords.push(word)
   });
 
@@ -86,8 +89,11 @@ $(document).ready(() => {
           charInputObj.attr('readonly', true);
           $(`#char-${charPos + 1}`).attr('readonly', false);
           if (Number(charInputObj.data('char-pos')) === word.length - 1) {
-            togglePronunciation();
-            playAudio($('.pronunciation-audio').data('pronunciation-url'));
+            if (currentWord.pronunciation) {
+              showPronunciation();
+              playAudio($('.pronunciation-audio').data('pronunciation-url'));
+            }
+
             toggleButtons();
 
             if (currentWord.study_progress < 100 && currentTypoCount < MAX_TYPOS) {
@@ -121,7 +127,7 @@ $(document).ready(() => {
       currentWordIndex++;
       const currentWord = words[currentWordIndex];
       toggleButtons();
-      togglePronunciation();
+      hidePronunciation();
       updateCard(currentWord);
       currentTypoCount = 0;
     } else if (currentWordIndex === words.length - 1) {
@@ -129,14 +135,20 @@ $(document).ready(() => {
     }
   });
 
-  function togglePronunciation() {
+  function showPronunciation() {
     const pronunciation = $('.pronunciation');
-    if (pronunciation.css('visibility') === 'visible') {
-      pronunciation.css('visibility', 'hidden');
-    } else {
+    if (pronunciation.css('visibility') !== 'visible') {
       pronunciation.css('visibility', 'visible');
     }
   }
+
+  function hidePronunciation() {
+    const pronunciation = $('.pronunciation');
+    if (pronunciation.css('visibility') !== 'hidden') {
+      pronunciation.css('visibility', 'hidden');
+    }
+  }
+
 
   function toggleButtons() {
     $('#next').toggle();

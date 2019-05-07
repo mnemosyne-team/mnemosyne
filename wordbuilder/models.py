@@ -309,7 +309,10 @@ class UserWord(models.Model):
             'id': self.id,
             'word': self.word.name,
             'lexical_category': self.lexical_category.to_dict(),
-            'pronunciation': self.pronunciation.to_dict(),
+            'pronunciation': (
+                self.pronunciation.to_dict()
+                if self.pronunciation is not None else None
+            ),
             'sense': self.sense.to_dict(),
             'study_progress': self.study_progress
         }

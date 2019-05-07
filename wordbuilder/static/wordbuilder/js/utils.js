@@ -1,7 +1,9 @@
 function playAudio(src) {
-    const audioPlayer = document.createElement('audio');
-    $(audioPlayer).attr('src', src);
-    audioPlayer.play();
+    if (src) {
+        const audioPlayer = document.createElement('audio');
+        $(audioPlayer).attr('src', src);
+        audioPlayer.play();
+    }
 }
 
 function saveWordsProgress(words) {
@@ -95,6 +97,14 @@ function initDefinition(word) {
 }
 
 function updatePronunciation(word) {
-    $('.pronunciation-spelling').text(`[${word.pronunciation.phonetic_spelling}]`);
-    $('.pronunciation-audio').data('pronunciation-url', word.pronunciation.audio);
+    let phoneticSpelling = '';
+    let pronunciationAudio = '';
+
+    if (word.pronunciation) {
+        phoneticSpelling = word.pronunciation.phonetic_spelling;
+        pronunciationAudio = word.pronunciation.audio;
+    }
+
+    $('.pronunciation-spelling').text(`[${phoneticSpelling}]`);
+    $('.pronunciation-audio').data('pronunciation-url', pronunciationAudio);
 }
