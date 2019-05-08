@@ -336,6 +336,10 @@ class WordConstructorView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/word_constructor.html'
 
 
+class DefinitionsView(LoginRequiredMixin, TemplateView):
+    template_name = 'wordbuilder/definitions_training.html'
+
+
 class PronunciationView(LoginRequiredMixin, TemplateView):
     template_name = 'wordbuilder/pronunciation_training.html'
 

@@ -1,0 +1,28 @@
+{% extends 'wordbuilder/training_tmp.html' %}
+
+{% load static %}
+
+{% block title %}Definitions training{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'wordbuilder/css/definitions.css' %}">
+{% endblock %}
+
+{% block card-content %}
+    <div class="name"></div>
+    <div id="title" class="center">Pick a definition</div>
+    <table id="definitions" class="striped centered"></table>
+{% endblock %}
+
+{% block card-action %}
+    <button class="btn waves-effect waves-light red lighten-2 answer" id="btn-0" value="0">A</button>
+    <button class="btn waves-effect waves-light red lighten-2 answer" id="btn-1" value="1">B</button>
+    <button class="btn waves-effect waves-light red lighten-2 answer" id="btn-2" value="2">C</button>
+    <button class="btn waves-effect waves-light red lighten-2 answer" id="btn-3" value="3">D</button>
+    <button id="next" class="btn waves-effect waves-light red lighten-2 center">Next<i class="material-icons right">arrow_forward</i></button>
+    <input type="hidden" name="category" value="{{ category }}">
+{% endblock %}
+
+{% block training-js %}
+    <script src="{% static 'wordbuilder/js/definitions.js?newver' %}"></script>
+{% endblock %}
