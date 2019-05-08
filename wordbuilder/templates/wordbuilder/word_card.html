@@ -3,7 +3,13 @@
         <div class="col s12">
             <div>
                 <a class="pronunciation tooltipped"
-                   data-position="top" data-tooltip="[{{ word.pronunciation.phonetic_spelling }}]"
+                   data-position="top"
+                   data-tooltip=
+                           "{% if word.pronunciation.phonetic_spelling %}
+                                [{{ word.pronunciation.phonetic_spelling }}]
+                           {% else %}
+                                No transcription
+                           {% endif %}"
                    data-pronunciation-url="{{ word.pronunciation.audio }}">
                     <i class="small material-icons left">volume_up</i>
                 </a>
@@ -24,11 +30,15 @@
                         {{ word.sense.definitions.first.text }}
                     </div>
                     <div class="collapsible-body white">
-                        <ol>
-                           {% for example in word.sense.examples.all %}
-                               <li>{{ example.text }}</li>
-                           {% endfor %}
-                        </ol>
+                        {% if word.sense.examples.all %}
+                            <ol>
+                                {% for example in word.sense.examples.all %}
+                                    <li>{{ example.text }}</li>
+                                {% endfor %}
+                            </ol>
+                        {% else %}
+                            <span class="grey-text">No examples for this word.</span>
+                        {% endif %}
                     </div>
                 </li>
             </ul>

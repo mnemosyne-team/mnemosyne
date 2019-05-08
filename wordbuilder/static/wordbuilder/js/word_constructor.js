@@ -71,8 +71,13 @@ $(document).ready(() => {
         }
     }
 
-    const currentWord = words[currentWordIndex];
-    const word = currentWord.word.toUpperCase();
+    let currentWord = {};
+    let word = '';
+
+    if (words.length > 0) {
+      currentWord = words[currentWordIndex];
+      word = currentWord.word.toUpperCase();
+    }
 
     for (let charInput of $('.char-input')) {
       const charInputObj = $(charInput);
@@ -170,13 +175,17 @@ $(document).ready(() => {
 
   getUserWords(wordsetId)
       .then(userWords => {
-          words = userWords;
-          updateCard(words[currentWordIndex]);
-          $('.char-input').on('input', function() {
-            const charPos = Number($(this).data('char-pos'));
-            if (words[currentWordIndex][charPos] !== $(this).val().toUpperCase()) {
-              $(this).val('');
-            }
-          });
+          if (userWords.length > 0) {
+            words = userWords;
+            updateCard(words[currentWordIndex]);
+            $('.char-input').on('input', function() {
+              const charPos = Number($(this).data('char-pos'));
+              if (words[currentWordIndex][charPos] !== $(this).val().toUpperCase()) {
+                $(this).val('');
+              }
+            });
+          } else {
+            $('.container .col').html('<h5 class="center">You have no words to train</h5>');
+          }
       });
 });

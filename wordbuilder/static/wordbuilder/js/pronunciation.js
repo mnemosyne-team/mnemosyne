@@ -117,8 +117,12 @@ $(document).ready(() => {
 
     getUserWords(wordsetId)
       .then(userWords => {
-          words = userWords;
-          updateCard(words[currentWordIndex]);
+          if (userWords.length > 0) {
+            words = userWords;
+            updateCard(words[currentWordIndex]);
+          } else {
+              $('.container .col').html('<h5 class="center">You have no words to train</h5>');
+          }
       });
 
     $('#next').click(event => {

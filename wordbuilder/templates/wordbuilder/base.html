@@ -14,8 +14,8 @@
         ul.dropdown-content li:hover {
             background: rgba(130, 130, 130, 0.05);
         }
-        .brand-logo {
-            margin-left: 10px;
+        .brand-logo, .nav-content > div {
+            margin-left: 18px;
         }
     </style>
     <!-- Custom CSS -->
@@ -25,7 +25,7 @@
 <body>
     {% include 'wordbuilder/profile_dopdown.html' with id='dropdown-profile' %}
     {% include 'wordbuilder/profile_dopdown.html' with id='dropdown-profile-mobile' %}
-    <nav>
+    <nav class="nav-extended">
         <div class="nav-wrapper">
             <a href="{% url 'index' %}" class="brand-logo">Mnemosyne</a>
             <a href="#" data-target="mobile-nav-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -42,17 +42,15 @@
                 {% endif %}
             </ul>
         </div>
-
-    </nav>
-    <nav>
-        <div class="nav-wrapper">
+        <div class="nav-content">
             <div class="col s12">
                 {% block breadcrumbs %}
-                    <a href={% url 'index' %} class="breadcrumb">Home</a>
+                    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
                 {% endblock %}
             </div>
         </div>
     </nav>
+
     <ul class="sidenav red lighten-2 white-text" id="mobile-nav-menu">
         <li><a href="{% url 'catalog' %}">Catalog</a></li>
         <li><a href="{% url 'trainings' %}">Trainings</a></li>

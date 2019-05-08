@@ -23,19 +23,22 @@
                 <!-- Collapsible header -->
                 <div class="collapsible-header">
                     <div>
-                        <span class="pros">
-                            {{ lexicalEntry.lexical_category.name.toLowerCase() }}
-                        </span>
-                        <span class="pros" v-if="lexicalEntry.pronunciation[0]">
-                            /{{ lexicalEntry.pronunciation[0].phonetic_spelling}}/
-                        </span>
-                        <span v-if="lexicalEntry.pronunciation[0]">
+                        <span v-if="lexicalEntry.pronunciation[0]" class="left">
                             <a v-on:click="handlePronunciation" class="pronunciation tooltipped"
                                :data-pronunciation-url="lexicalEntry.pronunciation[0].audio"
                                data-position="top">
-                                <i class="material-icons red-text">volume_up</i>
+                                <i class="material-icons red-text text-lighten-2 left">volume_up</i>
                             </a>
                         </span>
+
+                        <span class="pros" v-if="lexicalEntry.pronunciation[0]">
+                            /{{ lexicalEntry.pronunciation[0].phonetic_spelling}}/
+                        </span>
+
+                        <span class="pros">
+                            {{ lexicalEntry.lexical_category.name.toLowerCase() }}
+                        </span>
+
                     </div>
                 </div>
                 <!-- Collapsible header end -->

@@ -3,14 +3,15 @@
 {% block title %}Mnemosyne - User Profile{% endblock %}
 
 {% block breadcrumbs %}
-    <a href={% url 'index' %} class="breadcrumb">Home</a>
-    <a href='#' class="breadcrumb">User Profile</a>
+    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
+    <a href="{% url 'profile' %}" class="breadcrumb">User Profile</a>
+    <a href='#' class="breadcrumb active">Update Profile</a>
 {% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="row">
-            <h3>Update your personal data</h3>
+            <h3 class="center">Update your personal data</h3>
             <div class="col s12 m8 offset-m2 l6 offset-l3">
                <form method="post">
                    {% include 'registration/form.html' with button_text='Save changes' %}
