@@ -127,11 +127,15 @@ $(document).ready(() => {
 
   getUserWords(wordsetId)
       .then(userWords => {
-          words = userWords;
-          for(let word in words) {
-              allDefinitions.push(words[word]['sense']['definitions'][0]);
+          if (userWords.length > 0) {
+              words = userWords;
+              for(let word in words) {
+                  allDefinitions.push(words[word]['sense']['definitions'][0]);
+              }
+              allDefinitions = allDefinitions.concat(extraDefinitions);
+              updateCard(words[currentWordIndex]);
+          } else {
+              $('.container .col').html('<h5 class="center">You have no words to train</h5>');
           }
-          allDefinitions = allDefinitions.concat(extraDefinitions);
-          updateCard(words[currentWordIndex]);
       });
 });

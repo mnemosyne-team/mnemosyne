@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{% static 'wordbuilder/css/definitions.css' %}">
 {% endblock %}
 
+{% block breadcrumbs %}
+    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
+    <a href="{% url 'trainings' %}" class="breadcrumb">Trainings</a>
+    <a href='#' class="breadcrumb">Definitions</a>
+{% endblock %}
+
 {% block card-content %}
     <div class="name"></div>
     <div id="title" class="center">Pick a definition</div>
@@ -24,5 +30,5 @@
 {% endblock %}
 
 {% block training-js %}
-    <script src="{% static 'wordbuilder/js/definitions.js?newver' %}"></script>
+    <script src="{% static 'wordbuilder/js/definitions.js?' %}"></script>
 {% endblock %}
