@@ -8,6 +8,11 @@
     <link href="{% static 'wordbuilder/css/dictionary.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block breadcrumbs %}
+    <a href={% url 'index' %} class="breadcrumb">Home</a>
+    <a href='#' class="breadcrumb">Collection</a>
+{% endblock %}
+
 {% block content %}
     <h5 style="text-align: center">{{ wordset.title }}</h5><br>
     <div class="container">

@@ -2,6 +2,11 @@
 
 {% block title %}Mnemosyne - Statistics{% endblock %}
 
+{% block breadcrumbs %}
+    <a href={% url 'index' %} class="breadcrumb">Home</a>
+    <a href='#' class="breadcrumb">Statistics</a>
+{% endblock %}
+
 {% block content %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <h5 style="text-align: center">Statistics</h5><br>

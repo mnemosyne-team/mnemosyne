@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="{% static 'wordbuilder/css/pronunciation.css' %}">
 {% endblock %}
 
+{% block breadcrumbs %}
+    <a href={% url 'index' %} class="breadcrumb">Home</a>
+    <a href={% url 'trainings' %} class="breadcrumb">Trainings</a>
+    <a href='#' class="breadcrumb">Pronunciation</a>
+{% endblock %}
+
 {% block card-content %}
     <button class="record btn-floating btn-large red lighten-2"><i class="large material-icons white-text">mic</i></button>
     <div class="blue-grey-text text-lighten-2">Space</div>
