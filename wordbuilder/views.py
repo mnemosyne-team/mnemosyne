@@ -381,3 +381,11 @@ class StatisticsView(TemplateView):
         context['week_days'] = week_days
 
         return context
+
+
+def error_404(request, exception):
+    return render(request, 'wordbuilder/404.html', context={})
+
+
+def error_500(request):
+    return render(request, 'wordbuilder/500.html', context={})
