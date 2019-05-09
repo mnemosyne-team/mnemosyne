@@ -10,3 +10,7 @@
 .word, .userWord {
    font-size: 1.2rem;
 }
+
+.pronunciation {
+    visibility: hidden;
+}

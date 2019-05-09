@@ -59,6 +59,7 @@ function checkPronunciation(pronunciation) {
                } else {
                    userWordObj.addClass('incorrect');
                    if (attempt >= MAX_ATTEMPTS) {
+                       $('.pronunciation').css('visibility', 'visible');
                        const currentWord = words[currentWordIndex];
                        const currentWordProgress = currentWord.study_progress;
                        if (currentWordProgress > 0) {
@@ -71,6 +72,7 @@ function checkPronunciation(pronunciation) {
                    }
                }
                if (userWord === '') {
+                   userWordObj.removeClass('incorrect');
                    userWordObj.text("Can't recognize");
                } else {
 
@@ -79,7 +81,7 @@ function checkPronunciation(pronunciation) {
            } else {
                userWordObj.text("Can't recognize");
                if (attempt < MAX_ATTEMPTS) {
-                   $('.record').removeClass('dis abled');
+                   $('.record').removeClass('disabled');
                }
            }
            $('#next').toggleClass('disabled');
@@ -92,6 +94,8 @@ function updateCard(word) {
     $('.word').text(word.word);
     $('.userWord').text('');
     $('.record').removeClass('disabled');
+    $('.pronunciation').css('visibility', 'hidden');
+    updatePronunciation(word);
     initWordProgress(word);
     updateProgressBar(currentWordIndex+1, words.length);
     updateWordNum(currentWordIndex+1, words.length);
@@ -101,16 +105,22 @@ $(document).ready(() => {
 
     document.addEventListener('keydown', function (event) {
         let button = null;
-        event.preventDefault();
         if (event.keyCode === 13) {
+            event.preventDefault();
             button = $('#next');
         } else if (event.keyCode === 32 && attempt < MAX_ATTEMPTS && !isCorrectlyPronounced) {
+            event.preventDefault();
             button = $('.record');
         }
         if (button) {
             button.focus();
             button.trigger('click');
         }
+    });
+
+    $('.pronunciation-audio').click(event => {
+        event.preventDefault();
+        playAudio($(event.currentTarget).data('pronunciation-url'));
     });
 
     let wordsetId = $('input[name="category"]').val();
