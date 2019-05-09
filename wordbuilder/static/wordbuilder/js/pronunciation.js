@@ -127,12 +127,14 @@ $(document).ready(() => {
 
     getUserWords(wordsetId)
       .then(userWords => {
+          const trainingContent = $('.container > .row > .col');
           if (userWords.length > 0) {
             words = userWords;
             updateCard(words[currentWordIndex]);
           } else {
-              $('.container .col').html('<h5 class="center">You have no words to train</h5>');
+              trainingContent.html('<h5 class="center">You have no words to train</h5>');
           }
+          trainingContent.css('visibility', 'visible');
       });
 
     $('#next').click(event => {
