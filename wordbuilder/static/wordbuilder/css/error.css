@@ -8,12 +8,12 @@ body {
   margin: 0;
 }
 
-#notfound {
+#error-container {
   position: relative;
   height: 100vh;
 }
 
-#notfound .notfound {
+#error-container .error-content {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -22,7 +22,7 @@ body {
           transform: translate(-50%, -50%);
 }
 
-.notfound {
+.error-content {
   max-width: 710px;
   width: 100%;
   text-align: center;
@@ -30,20 +30,20 @@ body {
   line-height: 1.4;
 }
 
-.notfound .notfound-404 {
+.error-content .error-header {
   height: 200px;
   line-height: 200px;
 }
 
-.notfound .notfound-404 h1 {
+.error-content .error-header h1 {
   font-family: 'Fredoka One', cursive;
   font-size: 168px;
   margin: 0px;
-  color: #ff508e;
+  color: #e57373;
   text-transform: uppercase;
 }
 
-.notfound h2 {
+.error-content h2 {
   font-family: 'Raleway', sans-serif;
   font-size: 22px;
   font-weight: 400;
@@ -52,7 +52,7 @@ body {
   margin: 0;
 }
 
-.notfound a {
+.error-content a {
   font-family: 'Raleway', sans-serif;
   display: inline-block;
   font-weight: 700;
@@ -61,7 +61,7 @@ body {
   color: #39b1cb;
 }
 
-.notfound a>.arrow {
+.error-content a>.arrow {
   position: relative;
   top: -2px;
   border: solid #39b1cb;
@@ -74,11 +74,11 @@ body {
 }
 
 @media only screen and (max-width: 767px) {
-  .notfound .notfound-404 {
+  .error-content .error-header {
     height: 122px;
     line-height: 122px;
   }
-  .notfound .notfound-404 h1 {
+  .error-content .error-header h1 {
     font-size: 122px;
   }
 }

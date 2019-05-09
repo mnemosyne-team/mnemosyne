@@ -1,0 +1,12 @@
+{% extends 'wordbuilder/errors/error.html' %}
+
+{% load static %}
+
+{% block title %}Server error{% endblock %}
+
+{% block error-header %}500{% endblock %}
+
+{% block error-text %}
+    The server encountered an internal error or misconfiguration and was
+    unable to complete your request.
+{% endblock %}

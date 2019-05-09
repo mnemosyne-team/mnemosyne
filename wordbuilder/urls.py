@@ -44,6 +44,3 @@ urlpatterns = [
     path('catalog/<int:word_set_id>', views.WordSetDetailView.as_view(), name='wordset_detail'),
     path('statistics/', views.StatisticsView.as_view(), name='statistics'),
 ]
-
-handler404 = views.error_404
-handler500 = views.error_500

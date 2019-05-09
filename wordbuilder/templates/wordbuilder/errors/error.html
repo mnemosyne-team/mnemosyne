@@ -1,0 +1,21 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    <link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'wordbuilder/css/error.css' %}" />
+{% endblock %}
+
+{% block content %}
+   <div id="error-container">
+		<div class="error-content">
+			<div class="error-header">
+				<h1>{% block error-header %}{% endblock %}</h1>
+			</div>
+			<h2>{% block error-text %}{% endblock %}</h2>
+			<a href="{% url 'index' %}"><span class="arrow"></span>Return To Homepage</a>
+		</div>
+	</div>
+{% endblock %}
