@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn mnemosyne.wsgi --log-file -
+web: python manage.py collectstatic --noinput; gunicorn mnemosyne.wsgi --log-file -
