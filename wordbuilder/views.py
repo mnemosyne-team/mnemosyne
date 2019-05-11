@@ -17,7 +17,8 @@ from wordbuilder.forms import SignUpForm, ProfileUpdateForm, WordSetCreateForm, 
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = 'wordbuilder/index.html'
+    def get(self, request, *args, **kwargs):
+        return redirect('dictionary/')
 
 
 class SignUpView(FormView):
