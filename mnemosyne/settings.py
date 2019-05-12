@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'wordbuilder.apps.WordbuilderConfig',
     'widget_tweaks',
     'materializecssform',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,12 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+
+# Media files
+# MEDIA_ROOT = os.path.join(BASE_DIR,)
+MEDIA_URL = '/media/'
+
+
 # Use code lower to work locally.
 # django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
 # Deploy without it.
@@ -151,3 +158,13 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+
+
+# S3 settings
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

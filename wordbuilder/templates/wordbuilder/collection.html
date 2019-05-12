@@ -3,7 +3,6 @@
 {% block title %}Mnemosyne - Collections{% endblock %}
 
 {% block breadcrumbs %}
-    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
     <a href='#' class="breadcrumb">Catalog</a>
 {% endblock %}
 
@@ -20,11 +19,15 @@
                         <div class="col s12 l3">
                             <div class="card" style="width: 200px">
                                 <div class="card-image">
-                                    <img src="https://picsum.photos/300">
+                                    {% if wordset.0.image %}
+                                        <img src="{{ wordset.0.image.url }}">
+                                    {% else %}
+                                        <img src="https://picsum.photos/300">
+                                    {% endif %}
                                 </div>
                                 <div class="card-content">
                                     <h5 class="card-header center" style="margin-top: 0">{{ wordset.0.title|truncatewords_html:1 }}</h5>
-                                    <p class="right"><span>{{ wordset.1 }}</span> Words</p>
+                                    <p class="right"><span>{{ wordset.1 }}</span> Word{{ wordset.1|pluralize }}</p>
                                 </div>
                                 <div class="card-action">
                                     <a href="{% url 'wordset_detail' wordset.0.id %}">See words</a>

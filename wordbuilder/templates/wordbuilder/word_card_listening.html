@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="progress red lighten-4">
+                <div class="determinate red lighten-2" style="width: {{ progress }}%"></div>
+            </div>
+            <div class="card" id="{{ word.id }}">
+                <div class="card-content center">
+                    <a class="pronunciation btn-floating btn-large red lighten-2 pulse" data-pronunciation-url="{{ word.pronunciation.audio }}" href=""><i class="material-icons large">volume_up</i></a>
+                    <div class="transcription"></div>
+                    <div class="input-field">
+                        <input type="text" placeholder="Enter the word you've heard">
+                    </div>
+                    <div class="correct">
+                        <div class="answer-text answer correct-answer">Correct!</div>
+                    </div>
+                    <br>
+                    <div class="listen-answer">
+                        <div class="user-text answer incorrect-answer"></div>
+                        <div class="answer-text answer correct-answer">{{ word }}</div>
+                        <p class="transcription">[{{ word.pronunciation }}]</p>
+                        <i class="definition">{{ word.sense.definitions.first.text }}</i>
+                    </div>
+                </div>
+                <div class="card-action center">
+                    <span class="span-space blue-grey-text text-lighten-2">Space</span>
+                    <button class="button-no-answer btn waves-effect waves-ligth red lighten-2">I don't know</button>
+                    <button class="button-check btn waves-effect waves-ligth red lighten-2"><i class="material-icons left">check</i>Check</button>
+                    <span class="span-enter blue-grey-text text-lighten-2">Enter</span>
+                    <button class="button-next btn waves-effect waves-light red lighten-2">Next<i class="material-icons right">arrow_forward</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

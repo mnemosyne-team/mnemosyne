@@ -1,0 +1,17 @@
+.listen-answer, .correct, .results, .button-show-results {
+  font-size: 20px;
+  visibility: hidden;
+}
+
+.correct-answer {
+  color: #62BD96;
+}
+
+.incorrect-answer {
+  color: #F15839;
+  text-decoration: line-through;
+}
+
+.button-next {
+  display: none;
+}

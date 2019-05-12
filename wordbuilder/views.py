@@ -4,7 +4,7 @@ import random
 
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import TemplateView, FormView, DetailView, UpdateView, View, ListView
+from django.views.generic import TemplateView, FormView, DetailView, UpdateView, View, ListView, DeleteView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import (
@@ -12,12 +12,13 @@ from django.http import (
 )
 
 from wordbuilder.models import Dictionary, Word, Sense, UserWord, WordSet, Category, Statistics
-from wordbuilder.utils import get_word_data, get_text
+from wordbuilder.utils import get_word_data, get_text, convert_image
 from wordbuilder.forms import SignUpForm, ProfileUpdateForm, WordSetCreateForm, WordSetUpdateForm
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = 'wordbuilder/index.html'
+    def get(self, request, *args, **kwargs):
+        return redirect('dictionary/')
 
 
 class SignUpView(FormView):
@@ -63,13 +64,15 @@ class UserWordView(LoginRequiredMixin, View):
     def get(self, request, word_set_pk):
         response = {'words': []}
         if word_set_pk == 0:
-            for word in request.user.dictionary.words.all()[:10]:
-                response['words'].append(word.to_dict())
+            words = request.user.dictionary.words.all()
         else:
-            for word in request.user.dictionary.words.filter(word_set__pk=word_set_pk).all()[:10]:
-                response['words'].append(word.to_dict())
+            words = request.user.dictionary.words.filter(word_set__pk=word_set_pk).all()
 
-        random.shuffle(response['words'])
+        words = list(words)
+        k = 10 if len(words) >= 10 else len(words)
+        for word in random.sample(words, k=k):
+            response['words'].append(word.to_dict())
+
         return JsonResponse(response, status=200)
 
     def post(self, request):
@@ -180,9 +183,21 @@ class WordSetCreateView(UserPassesTestMixin, FormView):
             )
             category.save()
 
+        image = self.request.FILES.get('image', None)
+
+        if image is not None:
+            x = form.cleaned_data.get('x')
+            y = form.cleaned_data.get('y')
+            width = form.cleaned_data.get('width')
+            height = form.cleaned_data.get('height')
+            img = convert_image(image, x, y, width, height)
+        else:
+            img = None
+
         wordset = WordSet(
             title=form.data.get('title'),
-            category_id=category.id
+            category_id=category.id,
+            image=img
         )
         wordset.save()
 
@@ -258,7 +273,13 @@ class WordSetDetailView(LoginRequiredMixin, FormView):
         return redirect(reverse_lazy('wordset_detail', kwargs={'word_set_id': word_set_id}))
 
 
-class WordSetUpdateView(LoginRequiredMixin, FormView):
+class WordSetUpdateView(UserPassesTestMixin, FormView):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        return redirect(reverse('dictionary'))
+
     def get_form_kwargs(self):
         kwargs = super(WordSetUpdateView, self).get_form_kwargs()
 
@@ -272,6 +293,16 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
         word_set_id = self.kwargs.pop('word_set_id', None)
         wordset = WordSet.objects.get(id=word_set_id)
         wordset.title = form.cleaned_data['title']
+
+        if 'image' in self.request.FILES:
+            image = self.request.FILES.get('image', None)
+            x = form.cleaned_data.get('x')
+            y = form.cleaned_data.get('y')
+            width = form.cleaned_data.get('width')
+            height = form.cleaned_data.get('height')
+
+            img = convert_image(image, x, y, width, height)
+            wordset.image = img
 
         try:
             new_category = Category.objects.get(name=form.cleaned_data['category'])
@@ -299,23 +330,43 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
     form_class = WordSetUpdateForm
     success_url = reverse_lazy('wordsets')
 
-    
-class ProgressUpdateAjaxView(LoginRequiredMixin, View):
 
+class WordSetDeleteView(UserPassesTestMixin, DeleteView):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        return redirect(reverse('dictionary'))
+
+    def delete(self, request, *args, **kwargs):
+        word_set_id = self.kwargs.pop('word_set_id')
+        UserWord.objects.filter(word_set_id=word_set_id).update(word_set_id=None)
+        WordSet.objects.get(id=word_set_id).delete()
+        return redirect(self.success_url)
+
+    model = WordSet
+    pk_url_kwarg = 'word_set_id'
+    template_name = 'wordbuilder/word_set_delete.html'
+    success_url = reverse_lazy('wordsets')
+
+
+class ProgressUpdateAjaxView(LoginRequiredMixin, View):
     def post(self, request):
         trained_words = json.loads(request.body.decode('utf-8')).get('words')
         for word in trained_words:
             user_word = self.request.user.dictionary.words.filter(
                 word__name=word['word'].lower()
             ).first()
-            if word['isSuccessfullyTrained'] and user_word.study_progress < 100:
+
+            if word['isSuccessfullyTrained'] and \
+                    user_word.study_progress < 100:
                 user_word.study_progress += 25
                 if user_word.study_progress == 100:
                     user_word.learn_date = date.today()
                 user_word.save()
             elif not word['isSuccessfullyTrained'] and user_word.study_progress > 0:
                 user_word.study_progress -= 25
-                user_word.save()
+            user_word.save()
         return JsonResponse({}, status=200)
 
 
@@ -382,10 +433,40 @@ class StatisticsView(TemplateView):
 
         return context
 
-
+      
 def error_404(request, exception):
     return render(request, 'wordbuilder/errors/404.html', context={})
 
 
 def error_500(request):
     return render(request, 'wordbuilder/errors/500.html', context={})
+
+
+class ListeningTrainingView(LoginRequiredMixin, TemplateView):
+    template_name = 'wordbuilder/training_listening.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = int(context['category'])
+        if category == 0:
+            user_words_sorted = sorted(
+                self.request.user.dictionary.words.all(),
+                key=lambda x: x.study_progress, reverse=False
+            )
+        else:
+            user_words_sorted = sorted(
+                self.request.user.dictionary.words.filter(
+                    word_set_id=category
+                ),
+                key=lambda x: x.study_progress, reverse=False
+            )
+        words = [
+            word for word in user_words_sorted
+            if word.pronunciation is not None
+        ]
+
+        if len(user_words_sorted) < 10:
+            context['words'] = words
+        else:
+            context['words'] = random.sample(words, 10)
+        return context

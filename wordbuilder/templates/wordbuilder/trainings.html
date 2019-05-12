@@ -11,7 +11,6 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
     <a href="{% url 'trainings' %}" class="breadcrumb">Trainings</a>
 {% endblock %}
 
@@ -31,6 +30,7 @@
                 {% include 'wordbuilder/training_card.html' with training_name='Word constructor' url_name='word_constructor' %}
                 {% include 'wordbuilder/training_card.html' with training_name='Pronunciation' url_name='pronunciation' %}
                 {% include 'wordbuilder/training_card.html' with training_name='Definitions' url_name='definitions' %}
+                {% include 'wordbuilder/training_card.html' with training_name='Listening comprehension' url_name='listening' %}
            </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
 {% block custom_js %}
     <script>
         $(document).ready(function() {
-          $('select').formSelect();
+            $('select').formSelect();
 
           $('button').click(event => {
               const wordSetPk = $('select option:selected').val();

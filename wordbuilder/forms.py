@@ -63,6 +63,11 @@ class WordSetCreateForm(forms.Form):
 
     title = forms.CharField(max_length=30, required=True, label='Title')
     category = forms.CharField(max_length=30, required=True, label='Category')
+    image = forms.ImageField(label='Image', required=False)
+    x = forms.FloatField(widget=forms.HiddenInput(), label='SizeX', required=False)
+    y = forms.FloatField(widget=forms.HiddenInput(), label='SizeY', required=False)
+    width = forms.FloatField(widget=forms.HiddenInput(), label='SizeWidth', required=False)
+    height = forms.FloatField(widget=forms.HiddenInput(), label='SizeHeight', required=False)
 
 
 class WordSetUpdateForm(forms.Form):
@@ -85,11 +90,20 @@ class WordSetUpdateForm(forms.Form):
                 label='Category',
                 initial=word_set.category.name
             )
+            self.fields['image'] = forms.ImageField(
+                initial=word_set.image,
+                label='Image',
+                required=False
+            )
             self.fields['words'] = forms.ModelMultipleChoiceField(
-                required=True,
+                required=False,
                 widget=CheckboxSelectMultiple,
                 label='Words',
                 queryset=UserWord.objects.filter(
-                    Q(dictionary__user_id=user.id) | Q(word_set=word_set)
+                    Q(dictionary__user_id=user.id, word_set__isnull=True) | Q(word_set=word_set)
                 ).distinct('word__name', 'sense').order_by()
             )
+            self.fields['x'] = forms.FloatField(widget=forms.HiddenInput(), label='SizeX', required=False)
+            self.fields['y'] = forms.FloatField(widget=forms.HiddenInput(), label='SizeY', required=False)
+            self.fields['width'] = forms.FloatField(widget=forms.HiddenInput(), label='SizeWidth', required=False)
+            self.fields['height'] = forms.FloatField(widget=forms.HiddenInput(), label='SizeHeight', required=False)

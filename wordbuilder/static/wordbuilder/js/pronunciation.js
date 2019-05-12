@@ -127,47 +127,54 @@ $(document).ready(() => {
 
     getUserWords(wordsetId)
       .then(userWords => {
+          const trainingContent = $('.container > .row > .col');
           if (userWords.length > 0) {
             words = userWords;
             updateCard(words[currentWordIndex]);
           } else {
-              $('.container .col').html('<h5 class="center">You have no words to train</h5>');
+              trainingContent.html('<h5 class="center">You have no words to train</h5>');
           }
+          trainingContent.css('visibility', 'visible');
       });
 
     $('#next').click(event => {
-        if (!isCorrectlyPronounced && attempt < MAX_ATTEMPTS) {
-            const word = words[currentWordIndex].word;
-            trainedWords.unsuccessfullyTrainedWords.push(word);
-            saveWordsProgress([{word, isSuccessfullyTrained: false}])
+        if (!isRecording) {
+            if (!isCorrectlyPronounced && attempt < MAX_ATTEMPTS) {
+                const word = words[currentWordIndex].word;
+                trainedWords.unsuccessfullyTrainedWords.push(word);
+                saveWordsProgress([{word, isSuccessfullyTrained: false}])
+            }
+            if (currentWordIndex < words.length-1) {
+                currentWordIndex++;
+                updateCard(words[currentWordIndex]);
+            } else if (currentWordIndex >= words.length - 1) {
+                showResults(trainedWords);
+            }
         }
-        if (currentWordIndex < words.length-1 && !isRecording) {
-            currentWordIndex++;
-            updateCard(words[currentWordIndex]);
-        } else if (currentWordIndex >= words.length - 1) {
-            showResults(trainedWords);
-        }
+
     });
 
     navigator.mediaDevices.getUserMedia({audio:true, video: false})
         .then(stream => createMediaRecorder(stream))
         .then(({recorder, stream}) => {
             $('.record').click(event => {
-                $('#next').toggleClass('disabled');
-                $(event.currentTarget).addClass('disabled pulse');
-                $('.userWord').text('');
-                if (attempt < 3) {
-                    recorder.record();
-                    isRecording = true;
-                    attempt++;
-                    setTimeout(() => {
-                        recorder.stop();
-                        isRecording = false;
-                        $('.record').removeClass('pulse');
-                        $('.preloader-wrapper').toggleClass('active');
-                        recorder.exportWAV(checkPronunciation);
-                        recorder.clear();
-                    }, 3000);
+                if (!isRecording) {
+                    $('#next').toggleClass('disabled');
+                    $(event.currentTarget).addClass('disabled pulse');
+                    $('.userWord').text('');
+                    if (attempt < 3) {
+                        recorder.record();
+                        isRecording = true;
+                        attempt++;
+                        setTimeout(() => {
+                            recorder.stop();
+                            isRecording = false;
+                            $('.record').removeClass('pulse');
+                            $('.preloader-wrapper').toggleClass('active');
+                            recorder.exportWAV(checkPronunciation);
+                            recorder.clear();
+                        }, 3000);
+                    }
                 }
             });
         });

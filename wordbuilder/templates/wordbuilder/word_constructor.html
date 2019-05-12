@@ -4,12 +4,11 @@
 
 {% block title %}Word constructor{% endblock %}
 
-{% block custom_css %}
+{% block training-css %}
     <link rel="stylesheet" href="{% static 'wordbuilder/css/word_constructor.css' %}">
 {% endblock %}
 
 {% block breadcrumbs %}
-    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
     <a href="{% url 'trainings' %}" class="breadcrumb">Trainings</a>
     <a href='#' class="breadcrumb">Word constructor</a>
 {% endblock %}

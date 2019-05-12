@@ -3,6 +3,11 @@
 {% load static %}
 
 {% block custom_css %}
+    <style>
+        .container > .row > .col {
+            visibility: hidden;
+        }
+    </style>
     {% block training-css %}
     {% endblock %}
 {% endblock %}

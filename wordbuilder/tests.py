@@ -93,9 +93,7 @@ class WordbuilderTest(TestCase):
         self.client.login(username='test_user', password='12345')
         with self.settings(STATIC_URL='/static/',
                            STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'):
-            response1 = self.client.get('')
             response2 = self.client.get('/dictionary/')
             response3 = self.client.get('/profile/')
-            self.assertEqual(200, response1.status_code)
             self.assertEqual(200, response2.status_code)
             self.assertEqual(200, response3.status_code)
