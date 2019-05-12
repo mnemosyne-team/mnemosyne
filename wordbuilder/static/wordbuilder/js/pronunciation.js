@@ -85,6 +85,7 @@ function checkPronunciation(pronunciation) {
                }
            }
            $('#next').toggleClass('disabled');
+           isRecording = false;
        });
 }
 
@@ -105,14 +106,21 @@ $(document).ready(() => {
 
     document.addEventListener('keydown', function (event) {
         let button = null;
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            button = $('#next');
-        } else if (event.keyCode === 32 && attempt < MAX_ATTEMPTS && !isCorrectlyPronounced) {
-            event.preventDefault();
-            button = $('.record');
+        console.log('---1');
+        if (!isRecording) {
+            console.log('---2');
+            if (event.keyCode === 13) {
+                console.log('---3');
+                event.preventDefault();
+                button = $('#next');
+            } else if (event.keyCode === 32 && attempt < MAX_ATTEMPTS && !isCorrectlyPronounced) {
+                console.log('---4');
+                event.preventDefault();
+                button = $('.record');
+            }
         }
         if (button) {
+            console.log('---5');
             button.focus();
             button.trigger('click');
         }
@@ -158,23 +166,20 @@ $(document).ready(() => {
         .then(stream => createMediaRecorder(stream))
         .then(({recorder, stream}) => {
             $('.record').click(event => {
-                if (!isRecording) {
+                if (!isRecording && !isCorrectlyPronounced && attempt < MAX_ATTEMPTS) {
                     $('#next').toggleClass('disabled');
                     $(event.currentTarget).addClass('disabled pulse');
                     $('.userWord').text('');
-                    if (attempt < 3) {
-                        recorder.record();
-                        isRecording = true;
-                        attempt++;
-                        setTimeout(() => {
-                            recorder.stop();
-                            isRecording = false;
-                            $('.record').removeClass('pulse');
-                            $('.preloader-wrapper').toggleClass('active');
-                            recorder.exportWAV(checkPronunciation);
-                            recorder.clear();
-                        }, 3000);
-                    }
+                    recorder.record();
+                    isRecording = true;
+                    attempt++;
+                    setTimeout(() => {
+                        recorder.stop();
+                        $('.record').removeClass('pulse');
+                        $('.preloader-wrapper').toggleClass('active');
+                        recorder.exportWAV(checkPronunciation);
+                        recorder.clear();
+                    }, 3000);
                 }
             });
         });
