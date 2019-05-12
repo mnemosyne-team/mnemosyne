@@ -20,7 +20,11 @@
                         <div class="col s12 l3">
                             <div class="card" style="width: 200px">
                                 <div class="card-image">
-                                    <img src="https://picsum.photos/300">
+                                    {% if wordset.0.image %}
+                                        <img src="{{ wordset.0.image.url }}">
+                                    {% else %}
+                                        <img src="https://picsum.photos/300">
+                                    {% endif %}
                                 </div>
                                 <div class="card-content">
                                     <h5 class="card-header center" style="margin-top: 0">{{ wordset.0.title|truncatewords_html:1 }}</h5>

@@ -12,7 +12,7 @@ from django.http import (
 )
 
 from wordbuilder.models import Dictionary, Word, Sense, UserWord, WordSet, Category, Statistics
-from wordbuilder.utils import get_word_data, get_text
+from wordbuilder.utils import get_word_data, get_text, convert_image
 from wordbuilder.forms import SignUpForm, ProfileUpdateForm, WordSetCreateForm, WordSetUpdateForm
 
 
@@ -180,9 +180,21 @@ class WordSetCreateView(UserPassesTestMixin, FormView):
             )
             category.save()
 
+        image = self.request.FILES.get('image', None)
+
+        if image is not None:
+            x = form.cleaned_data.get('x')
+            y = form.cleaned_data.get('y')
+            width = form.cleaned_data.get('width')
+            height = form.cleaned_data.get('height')
+            img = convert_image(image, x, y, width, height)
+        else:
+            img = None
+
         wordset = WordSet(
             title=form.data.get('title'),
-            category_id=category.id
+            category_id=category.id,
+            image=img
         )
         wordset.save()
 
@@ -272,6 +284,16 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
         word_set_id = self.kwargs.pop('word_set_id', None)
         wordset = WordSet.objects.get(id=word_set_id)
         wordset.title = form.cleaned_data['title']
+
+        if 'image' in self.request.FILES:
+            image = self.request.FILES.get('image', None)
+            x = form.cleaned_data.get('x')
+            y = form.cleaned_data.get('y')
+            width = form.cleaned_data.get('width')
+            height = form.cleaned_data.get('height')
+
+            img = convert_image(image, x, y, width, height)
+            wordset.image = img
 
         try:
             new_category = Category.objects.get(name=form.cleaned_data['category'])

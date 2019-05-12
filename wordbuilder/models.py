@@ -264,7 +264,7 @@ class Category(models.Model):
 
 class WordSet(models.Model):
     title = models.CharField(max_length=30)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='pkhbh2nage7k/public/')
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='word_set'
     )

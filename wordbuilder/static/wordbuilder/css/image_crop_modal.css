@@ -1,0 +1,33 @@
+.modal {
+    min-height: calc(100vh - 180px);
+    height: 100%;
+    width: 75%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+#modal-content {
+    max-height: calc(100vh - 300px);
+    padding: 0;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#btn-modal-close {
+    margin: 5px 30px 5px 0;
+}
+
+.modal-header .row {
+    margin-bottom: 0;
+}
+
+.modal-footer {
+    height: 50px;
+}
+
+#image {
+    max-width: 100%;
+}

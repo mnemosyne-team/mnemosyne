@@ -1,7 +1,9 @@
+from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import path, reverse_lazy
 
+from django.conf import settings
 from wordbuilder import views
 
 urlpatterns = [
@@ -61,4 +63,4 @@ urlpatterns = [
     path('catalog/', views.CatalogView.as_view(), name='catalog'),
     path('catalog/<int:word_set_id>', views.WordSetDetailView.as_view(), name='wordset_detail'),
     path('statistics/', views.StatisticsView.as_view(), name='statistics'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.BASE_DIR)

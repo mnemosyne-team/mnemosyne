@@ -1,8 +1,14 @@
 {% extends 'wordbuilder/base.html' %}
 {% load widget_tweaks %}
 {% load materializecss %}
+{% load static %}
 
 {% block title %}Mnemosyne - Create wordset{% endblock %}
+
+{% block custom_css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css" rel="stylesheet">
+    <link href="{% static 'wordbuilder/css/image_crop_modal.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block breadcrumbs %}
     <a href="{% url 'index' %}" class="breadcrumb">Home</a>
@@ -15,40 +21,64 @@
         <div class="row">
             <h4 style="text-align: center">Wordsets</h4>
             <div class="col s12 m8 offset-m2 l6 offset-l3">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for field in form %}
-                        {% ifnotequal field.label 'Words' %}
-                            {{ field|materializecss }}
+                        {% if 'Size' in field.label %}
+                            {{ field }}
                         {% else %}
-                            <table class="striped centered">
-                                <thead>
-                                <tr>
-                                    <th>Word</th>
-                                    <th>Description</th>
-                                    <th>Add to wordset?</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for userword in field.field.queryset %}
+                            {% ifnotequal field.label 'Words' %}
+                                {% ifnotequal field.label 'Image' %}
+                                    {{ field|materializecss }}
+                                {% else %}
+                                    <div class="col s12">
+                                        <div class="file-field input-field">
+                                            <div class="red lighten-2 btn">
+                                                <span>Image</span><br>
+                                                <input type="file" name="image" accept="image/*" id="id_image">
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endifnotequal %}
+                            {% else %}
+                                <table class="striped centered">
+                                    <thead>
                                     <tr>
-                                        <td>{{ userword.word.name }}</td>
-                                        <td>{{ userword.sense.definitions.first.text }}</td>
-                                        <td>
-                                            <label>
-                                                <input type="checkbox" name="words" value="{{ userword.id }}"/>
-                                                <span></span>
-                                            </label>
-                                        </td>
+                                        <th>Word</th>
+                                        <th>Description</th>
+                                        <th>Add to wordset?</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endifnotequal %}
+                                    </thead>
+                                    <tbody>
+                                    {% for userword in field.field.queryset %}
+                                        <tr>
+                                            <td>{{ userword.word.name }}</td>
+                                            <td>{{ userword.sense.definitions.first.text }}</td>
+                                            <td>
+                                                <label>
+                                                    <input type="checkbox" name="words" value="{{ userword.id }}"/>
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endifnotequal %}
+                        {% endif %}
                     {% endfor %}
                     <button class="btn waves-effect waves-teal red lighten-2" type="submit">Add wordset</button>
                 </form>
             </div>
         </div>
+        {% include 'wordbuilder/image_crop_modal.html' %}
     </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
+    <script src="{% static 'wordbuilder/js/image_crop.js' %}"></script>
 {% endblock %}
