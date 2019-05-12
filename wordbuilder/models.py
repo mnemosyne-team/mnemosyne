@@ -1,4 +1,5 @@
 import datetime
+from os import environ
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -264,7 +265,7 @@ class Category(models.Model):
 
 class WordSet(models.Model):
     title = models.CharField(max_length=30)
-    image = models.ImageField(null=True, blank=True, upload_to='pkhbh2nage7k/public/')
+    image = models.ImageField(null=True, blank=True, upload_to=f"{environ.get('CLOUDCUBE_URL')}/public/")
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='word_set'
     )
