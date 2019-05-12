@@ -301,21 +301,22 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
 
     
 class ProgressUpdateAjaxView(LoginRequiredMixin, View):
-
     def post(self, request):
         trained_words = json.loads(request.body.decode('utf-8')).get('words')
         for word in trained_words:
             user_word = self.request.user.dictionary.words.filter(
                 word__name=word['word'].lower()
             ).first()
-            if word['isSuccessfullyTrained'] and user_word.study_progress < 100:
+
+            if word['isSuccessfullyTrained'] and \
+                    user_word.study_progress < 100:
                 user_word.study_progress += 25
                 if user_word.study_progress == 100:
                     user_word.learn_date = date.today()
                 user_word.save()
             elif not word['isSuccessfullyTrained'] and user_word.study_progress > 0:
                 user_word.study_progress -= 25
-                user_word.save()
+            user_word.save()
         return JsonResponse({}, status=200)
 
 
@@ -380,4 +381,34 @@ class StatisticsView(TemplateView):
         context['weekly_words'] = weekly_words
         context['week_days'] = week_days
 
+        return context
+
+
+class ListeningTrainingView(LoginRequiredMixin, TemplateView):
+    template_name = 'wordbuilder/training_listening.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = int(context['category'])
+        if category == 0:
+            user_words_sorted = sorted(
+                self.request.user.dictionary.words.all(),
+                key=lambda x: x.study_progress, reverse=False
+            )
+        else:
+            user_words_sorted = sorted(
+                self.request.user.dictionary.words.filter(
+                    word_set_id=category
+                ),
+                key=lambda x: x.study_progress, reverse=False
+            )
+        words = [
+            word for word in user_words_sorted
+            if word.pronunciation is not None
+        ]
+
+        if len(user_words_sorted) < 10:
+            context['words'] = words
+        else:
+            context['words'] = random.sample(words, 10)
         return context

@@ -8,7 +8,10 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(next_page=reverse_lazy('index')), name='logout'),
+    path(
+        'logout/', LogoutView.as_view(next_page=reverse_lazy('index')),
+        name='logout'
+    ),
     path('dictionary/', views.DictionaryView.as_view(), name='dictionary'),
     path('words/<str:word>/', views.WordDataView.as_view(), name='word_data'),
     path('user_words/', views.UserWordView.as_view(), name='user_words'),
@@ -29,17 +32,32 @@ urlpatterns = [
     path('reset-password-complete/',
          PasswordResetCompleteView.as_view(template_name='registration/password-reset-complete.html'),
          name='password_reset_complete'),
-
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('profile-update/', views.ProfileUpdateView.as_view(), name='profile_update'),
-    path('update_word_progress/', views.ProgressUpdateAjaxView.as_view(), name='update_word_progress'),
+    path(
+        'profile-update/', views.ProfileUpdateView.as_view(),
+        name='profile_update'
+    ),
+    path(
+        'update_word_progress/', views.ProgressUpdateAjaxView.as_view(),
+        name='update_word_progress'
+    ),
+    path(
+        'trainings/listening/<str:category>/',
+        views.ListeningTrainingView.as_view(),
+        name='listening-training'
+    ),
     path('trainings/', views.TrainingsView.as_view(), name='trainings'),
     path('trainings/word_constructor/<str:category>/', views.WordConstructorView.as_view(), name='word_constructor'),
     path('trainings/pronunciation/<str:category>/', views.PronunciationView.as_view(), name='pronunciation'),
     path('trainings/definitions/<str:category>/', views.DefinitionsView.as_view(), name='definitions'),
     path('wordsets/', views.WordSetView.as_view(), name='wordsets'),
-    path('add-wordset/', views.WordSetCreateView.as_view(), name='add_wordset'),
-    path('update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(), name='update_wordset'),
+    path(
+        'add-wordset/', views.WordSetCreateView.as_view(), name='add_wordset'
+    ),
+    path(
+        'update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(),
+        name='update_wordset'
+    ),
     path('catalog/', views.CatalogView.as_view(), name='catalog'),
     path('catalog/<int:word_set_id>', views.WordSetDetailView.as_view(), name='wordset_detail'),
     path('statistics/', views.StatisticsView.as_view(), name='statistics'),

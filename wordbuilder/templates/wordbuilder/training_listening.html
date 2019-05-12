@@ -1,0 +1,60 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% load static %}
+
+{% block title %}Listening comprehension{% endblock %}
+
+{% block custom_css %}
+    <link href="{% static 'wordbuilder/css/training_listening.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+    <a href="{% url 'index' %}" class="breadcrumb">Home</a>
+    <a href="{% url 'trainings' %}" class="breadcrumb">Trainings</a>
+    <a href='#' class="breadcrumb">Listening comprehension</a>
+{% endblock %}
+
+{% block content %}
+    {% if words|length < 1 %}
+        <h5 class="center">You have no words to train</h5>
+    {% else %}
+        <div class="words">
+            {% for word in words %}
+                {% include 'wordbuilder/word_card_listening.html' with word=word progress=0 %}
+            {% endfor %}
+            <div class="button-show-results center">
+                <button class="btn waves-effect waves-ligth red lighten-2">Show results</button>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m8 offset-m2 l6 offset-l3">
+                        <div class="card">
+                            <div class="card-content center">
+                                <table id="result-table" class="striped"></table>
+                                <div class="row center">
+                                    <button class="button-continue btn waves-effect waves-light red lighten-2" onclick="reloadPage();">Continue training</button>
+                                </div>
+                                <div class="row center">
+                                    <a class="button-back btn waves-effect waves-ligth red lighten-2" href={% url 'trainings' %}>To the list of trainings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'wordbuilder/js/training_listening.js' %}"></script>
+
+    <script type="text/javascript">
+        function reloadPage(){
+            window.location.replace(window.location.href);
+        }
+    </script>
+{% endblock %}
