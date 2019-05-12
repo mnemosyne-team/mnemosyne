@@ -43,33 +43,40 @@
                                     </div>
                                 {% endifnotequal %}
                             {% else %}
-                                <table class="striped centered">
-                                    <thead>
-                                    <tr>
-                                        <th>Word</th>
-                                        <th>Description</th>
-                                        <th>Add to wordset?</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for userword in field.field.queryset %}
+                                {% if not field.field.queryset %}
+                                    <h5 class="center">
+                                        You don't have words in your dictionary to add in this wordset.
+                                    </h5>
+                                {% else %}
+                                    <table class="striped centered">
+                                        <thead>
                                         <tr>
-                                            <td>{{ userword.word.name }}</td>
-                                            <td>{{ userword.sense.definitions.first.text }}</td>
-                                            <td>
-                                                <label>
-                                                    <input type="checkbox" name="words" value="{{ userword.id }}"/>
-                                                    <span></span>
-                                                </label>
-                                            </td>
+                                            <th>Word</th>
+                                            <th>Description</th>
+                                            <th>Add to wordset?</th>
                                         </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        {% for userword in field.field.queryset %}
+                                            <tr>
+                                                <td>{{ userword.word.name }}</td>
+                                                <td>{{ userword.sense.definitions.first.text }}</td>
+                                                <td>
+                                                    <label>
+                                                        <input type="checkbox" name="words" value="{{ userword.id }}"/>
+                                                        <span></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
                             {% endifnotequal %}
                         {% endif %}
                     {% endfor %}
-                    <button class="btn waves-effect waves-teal red lighten-2" type="submit">Add wordset</button>
+                    <br>
+                    <button class="btn waves-effect waves-teal red lighten-2 right" type="submit">Add wordset</button>
                 </form>
             </div>
         </div>

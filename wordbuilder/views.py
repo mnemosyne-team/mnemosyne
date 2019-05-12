@@ -4,7 +4,7 @@ import random
 
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import TemplateView, FormView, DetailView, UpdateView, View, ListView
+from django.views.generic import TemplateView, FormView, DetailView, UpdateView, View, ListView, DeleteView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import (
@@ -271,7 +271,13 @@ class WordSetDetailView(LoginRequiredMixin, FormView):
         return redirect(reverse_lazy('wordset_detail', kwargs={'word_set_id': word_set_id}))
 
 
-class WordSetUpdateView(LoginRequiredMixin, FormView):
+class WordSetUpdateView(UserPassesTestMixin, FormView):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        return redirect(reverse('dictionary'))
+
     def get_form_kwargs(self):
         kwargs = super(WordSetUpdateView, self).get_form_kwargs()
 
@@ -322,7 +328,26 @@ class WordSetUpdateView(LoginRequiredMixin, FormView):
     form_class = WordSetUpdateForm
     success_url = reverse_lazy('wordsets')
 
-    
+
+class WordSetDeleteView(UserPassesTestMixin, DeleteView):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        return redirect(reverse('dictionary'))
+
+    def delete(self, request, *args, **kwargs):
+        word_set_id = self.kwargs.pop('word_set_id')
+        UserWord.objects.filter(word_set_id=word_set_id).update(word_set_id=None)
+        WordSet.objects.get(id=word_set_id).delete()
+        return redirect(self.success_url)
+
+    model = WordSet
+    pk_url_kwarg = 'word_set_id'
+    template_name = 'wordbuilder/word_set_delete.html'
+    success_url = reverse_lazy('wordsets')
+
+
 class ProgressUpdateAjaxView(LoginRequiredMixin, View):
     def post(self, request):
         trained_words = json.loads(request.body.decode('utf-8')).get('words')

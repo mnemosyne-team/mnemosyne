@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="card-content">
                                     <h5 class="card-header center" style="margin-top: 0">{{ wordset.0.title|truncatewords_html:1 }}</h5>
-                                    <p class="right"><span>{{ wordset.1 }}</span> Words</p>
+                                    <p class="right"><span>{{ wordset.1 }}</span> Word{{ wordset.1|pluralize }}</p>
                                 </div>
                                 <div class="card-action">
                                     <a href="{% url 'wordset_detail' wordset.0.id %}">See words</a>

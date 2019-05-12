@@ -1,0 +1,21 @@
+{% extends 'wordbuilder/base.html' %}
+
+{% block title %}Mnemosyne - Delete Wordset{% endblock %}
+
+{% block content %}
+    <h5 style="text-align: center">Deleting Wordset {{ wordset.title }}</h5><br>
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+                <p style="text-align: center">
+                    There will be no way to revert these changes. All words in this wordset will stay,
+                    but they will not be bounded to any other wordset until you do so.
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button class="btn waves-effect waves-teal red lighten-2 right" type="submit">Delete wordset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

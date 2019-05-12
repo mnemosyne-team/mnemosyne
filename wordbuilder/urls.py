@@ -60,6 +60,7 @@ urlpatterns = [
         'update-wordset/<int:word_set_id>', views.WordSetUpdateView.as_view(),
         name='update_wordset'
     ),
+    path('delete-wordset/<int:word_set_id>', views.WordSetDeleteView.as_view(), name='delete_wordset'),
     path('catalog/', views.CatalogView.as_view(), name='catalog'),
     path('catalog/<int:word_set_id>', views.WordSetDetailView.as_view(), name='wordset_detail'),
     path('statistics/', views.StatisticsView.as_view(), name='statistics'),
