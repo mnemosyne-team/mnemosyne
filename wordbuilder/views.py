@@ -64,13 +64,15 @@ class UserWordView(LoginRequiredMixin, View):
     def get(self, request, word_set_pk):
         response = {'words': []}
         if word_set_pk == 0:
-            for word in request.user.dictionary.words.all()[:10]:
-                response['words'].append(word.to_dict())
+            words = request.user.dictionary.words.all()
         else:
-            for word in request.user.dictionary.words.filter(word_set__pk=word_set_pk).all()[:10]:
-                response['words'].append(word.to_dict())
+            words = request.user.dictionary.words.filter(word_set__pk=word_set_pk).all()
 
-        random.shuffle(response['words'])
+        words = list(words)
+        k = 10 if len(words) >= 10 else len(words)
+        for word in random.sample(words, k=k):
+            response['words'].append(word.to_dict())
+
         return JsonResponse(response, status=200)
 
     def post(self, request):
