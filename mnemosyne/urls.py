@@ -20,3 +20,6 @@ urlpatterns = [
     path('', include('wordbuilder.urls')),
     path('admin/', admin.site.urls),
 ]
+
+handler404 = 'wordbuilder.views.error_404'
+handler500 = 'wordbuilder.views.error_500'
